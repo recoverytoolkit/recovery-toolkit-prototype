@@ -262,7 +262,7 @@ function playCue(key, fallbackText){
   try {
       if(!document.getElementById('voice-toggle').checked) return;
       let resolved = false;
-      const audio = new Audio('audio/' + key + '.mp3');
+      const audio = new Audio(key + '.mp3');
       const fallback = () => { if(!resolved){ resolved = true; speak(fallbackText); } };
       audio.addEventListener('error', fallback);
       const playPromise = audio.play();
