@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Recovery Toolkit</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  * { -webkit-tap-highlight-color: transparent; -webkit-user-select: none; user-select: none; box-sizing: border-box; }
+  body { background-color: #020617; color: #f1f5f9; font-family: system-ui, -apple-system, sans-serif; margin: 0; padding: 16px; min-height: 100vh; }
+  .hidden { display: none !important; }
+  button { cursor: pointer; touch-action: manipulation; }
+  textarea, input[type=text] { background-color: #0f172a; color: #f1f5f9; border: 1px solid #1e293b; border-radius: 12px; padding: 12px; width: 100%; font-size: 12px; outline: none; -webkit-user-select: text; user-select: text; }
+  textarea:focus { border-color: rgba(45, 212, 191, 0.5); }
+  .navbar { display: flex; gap: 4px; background: #0f172a; padding: 4px; border-radius: 8px; border: 1px solid #1e293b; overflow-x: auto; }
+  .navbar::-webkit-scrollbar { display: none; }
+  .navbtn { padding: 6px 10px; background: transparent; color: #94a3b8; border-radius: 6px; font-size: 11px; font-weight: 500; border: none; white-space: nowrap; flex-shrink: 0; }
+  .card { background: rgba(15,23,42,0.8); padding: 12px; border-radius: 16px; border: 1px solid #1e293b; }
+  .label { color: #94a3b8; text-transform: uppercase; font-size: 10px; font-weight: 600; }
+  .primary-btn { width: 100%; background: #2dd4bf; color: #020617; font-weight: bold; padding: 12px; border-radius: 12px; font-size: 13px; border: none; }
+  .ghost-btn { width: 100%; background: #0f172a; color: #2dd4bf; border: 1px solid rgba(45,212,191,0.3); font-weight: bold; padding: 12px; border-radius: 12px; }
+  .chip { padding: 8px 12px; border-radius: 999px; font-size: 11px; border: 1px solid #1e293b; background: #0f172a; color: #94a3b8; }
+  .chip.active { border-color: #2dd4bf; background: rgba(45,212,191,0.15); color: #2dd4bf; }
+</style>
+</head>
+<body>
+<header style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 16px; border-bottom: 1px solid rgba(30,41,59,0.8); margin-bottom: 20px; gap: 10px;">
+<h1 style="font-weight: bold; color: #2dd4bf; font-size: 14px; margin: 0; flex-shrink: 0;">Recovery Toolkit</h1>
+<div class="navbar">
+<button onclick="tab('urge')" id="bu" class="navbtn">Surfer</button>
+<button onclick="tab('abcde')" id="ba" class="navbtn">ABCDE</button>
+<button onclick="tab('cba')" id="bc" class="navbtn">CBA</button>
+<button onclick="tab('hov')" id="bh" class="navbtn">Values</button>
+<button onclick="tab('ifthen')" id="bi" class="navbtn">If/Then</button>
+<button onclick="tab('checkin')" id="bk" class="navbtn">Check-In</button>
+<button onclick="tab('guide')" id="bg" class="navbtn">Guide</button>
+</div>
+</header>
+
+<!-- URGE SURFER TAB -->
+<div id="p-urge" style="display: flex; flex-direction: column; gap: 16px;">
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+<div class="card" style="text-align: center;">
+<div class="label">Current Streak</div>
+<div id="streak-count" style="font-size: 20px; font-weight: bold; color: #2dd4bf; margin-top: 4px;">1 Day</div>
+</div>
+<div class="card" style="text-align: center;">
+<div class="label">Urges Surfed</div>
+<div id="surfed-count" style="font-size: 20px; font-weight: bold; color: #2dd4bf; margin-top: 4px;">0</div>
+</div>
+</div>
+
+<button onclick="emergencyPanic()" style="width: 100%; background: rgba(244,63,94,0.2); border: 1px solid rgba(244,63,94,0.4); color: #fb7185; font-weight: bold; padding: 12px; border-radius: 12px; font-size: 13px;">🚨 Emergency Panic Mode (Instant Calm)</button>
+
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<button onclick="startWave()" class="primary-btn">Activate 90s Audio Wave & Water Sound</button>
+<label style="font-size: 11px; color: #94a3b8; display: flex; align-items: center; gap: 8px; cursor: pointer;">
+<input type="checkbox" id="voice-toggle" style="width: 14px; height: 14px; accent-color: #2dd4bf;" checked> Enable Voice Guidance
+</label>
+</div>
+
+<div class="card" style="height: 192px; position: relative;"><canvas id="c"></canvas></div>
+<div class="card" style="display: flex; justify-content: space-between; align-items: center; padding: 16px;">
+<div><div id="ws" style="font-weight: bold; color: #2dd4bf; font-size: 13px;">Idle</div><div style="color: #94a3b8; font-size: 11px; margin-top: 2px;">Supportive audio ready</div></div>
+<div style="font-size: 24px; font-family: monospace; font-weight: bold; color: #2dd4bf;"><span id="timer">90</span>s</div>
+</div>
+</div>
+
+<!-- ABCDE LOG TAB -->
+<div id="p-abcde" class="hidden" style="display: flex; flex-direction: column; gap: 14px; font-size: 12px;">
+<div style="display: flex; justify-content: space-between; align-items: center; background: rgba(15,23,42,0.8); padding: 12px; border-radius: 12px; border: 1px solid #1e293b;">
+<span style="color: #cbd5e1; font-weight: 500;">Demo Scenario: Sue's Trigger</span>
+<button onclick="loadSueABCDE()" style="padding: 6px 12px; background: rgba(45,212,191,0.2); color: #2dd4bf; border-radius: 8px; font-weight: 600; border: none;">Load Example</button>
+</div>
+<div style="display: flex; flex-direction: column; gap: 4px;">
+<label class="label">A - Activating Event (What happened?)</label>
+<textarea id="aa" rows="2" placeholder="Minor argument..."></textarea>
+</div>
+<div style="display: flex; flex-direction: column; gap: 4px;">
+<label class="label">B - Beliefs (What did you tell yourself?)</label>
+<textarea id="ab" rows="2" placeholder="I can't handle this..."></textarea>
+</div>
+<div style="display: flex; flex-direction: column; gap: 4px;">
+<label class="label">C - Consequences (How did you feel/react?)</label>
+<textarea id="ac" rows="2" placeholder="Chest tightness..."></textarea>
+</div>
+<div style="display: flex; flex-direction: column; gap: 4px;">
+<label class="label">D - Disputing (Is it true? Is it logical? Is it helpful?)</label>
+<textarea id="ad" rows="2" placeholder="Have I handled stress like this before?"></textarea>
+</div>
+<div style="display: flex; flex-direction: column; gap: 4px;">
+<label class="label">E - Effective New Belief</label>
+<textarea id="ae" rows="2" placeholder="This is uncomfortable, not unbearable..."></textarea>
+</div>
+<p style="color: #64748b; font-size: 10px; margin: 0;">D and E can be filled in later — A, B and C are enough to commit an entry in the moment.</p>
+<button onclick="saveABCDE()" class="ghost-btn">Commit Entry</button>
+<div id="abc-list" style="display: flex; flex-direction: column; gap: 8px; max-height: 220px; overflow-y: auto;"></div>
+</div>
+
+<!-- CBA TAB -->
+<div id="p-cba" class="hidden" style="display: flex; flex-direction: column; gap: 16px; font-size: 12px;">
+<div style="display: flex; justify-content: space-between; align-items: center; background: rgba(15,23,42,0.8); padding: 12px; border-radius: 12px; border: 1px solid #1e293b;">
+<span style="color: #cbd5e1; font-weight: 500;">Demo Scenario: Sue's Matrix</span>
+<button onclick="loadSueCBA()" style="padding: 6px 12px; background: rgba(45,212,191,0.2); color: #2dd4bf; border-radius: 8px; font-weight: 600; border: none;">Load Example</button>
+</div>
+<div style="display: flex; flex-direction: column; gap: 4px;"><label style="color: #2dd4bf; text-transform: uppercase; font-size: 10px; font-weight: bold;">Benefits of Using</label><textarea id="cb1" rows="2"></textarea></div>
+<div style="display: flex; flex-direction: column; gap: 4px;"><label style="color: #fb7185; text-transform: uppercase; font-size: 10px; font-weight: bold;">Costs of Using</label><textarea id="cb2" rows="2"></textarea></div>
+<div style="display: flex; flex-direction: column; gap: 4px;"><label style="color: #34d399; text-transform: uppercase; font-size: 10px; font-weight: bold;">Benefits of Not Using</label><textarea id="cb3" rows="2"></textarea></div>
+<div style="display: flex; flex-direction: column; gap: 4px;"><label style="color: #fbbf24; text-transform: uppercase; font-size: 10px; font-weight: bold;">Costs of Not Using</label><textarea id="cb4" rows="2"></textarea></div>
+<button onclick="saveCBA()" class="ghost-btn">Save Matrix</button>
+<div id="cba-disp" style="display: flex; flex-direction: column; gap: 8px; max-height: 220px; overflow-y: auto;"></div>
+</div>
+
+<!-- HIERARCHY OF VALUES TAB -->
+<div id="p-hov" class="hidden" style="display: flex; flex-direction: column; gap: 14px; font-size: 12px;">
+<div style="display: flex; justify-content: space-between; align-items: center; background: rgba(15,23,42,0.8); padding: 12px; border-radius: 12px; border: 1px solid #1e293b;">
+<span style="color: #cbd5e1; font-weight: 500;">Demo Scenario: Liam's Weekend</span>
+<button onclick="loadLiamHOV()" style="padding: 6px 12px; background: rgba(45,212,191,0.2); color: #2dd4bf; border-radius: 8px; font-weight: 600; border: none;">Load Example</button>
+</div>
+<p style="color: #94a3b8; line-height: 1.5; margin: 0;">Pick what matters most to you right now, then weigh the urge against it.</p>
+<div id="value-chips" style="display: flex; flex-wrap: wrap; gap: 8px;"></div>
+<div style="display: flex; flex-direction: column; gap: 4px;">
+<label class="label">Does this urge move you closer to, or further from, these?</label>
+<textarea id="hov-reflection" rows="3" placeholder="Acting on this urge would take me further from..."></textarea>
+</div>
+<button onclick="saveHOV()" class="ghost-btn">Save Values Check</button>
+<div id="hov-list" style="display: flex; flex-direction: column; gap: 8px; max-height: 220px; overflow-y: auto;"></div>
+</div>
+
+<!-- IF/THEN ACTION PLAN TAB -->
+<div id="p-ifthen" class="hidden" style="display: flex; flex-direction: column; gap: 14px; font-size: 12px;">
+<div style="display: flex; justify-content: space-between; align-items: center; background: rgba(15,23,42,0.8); padding: 12px; border-radius: 12px; border: 1px solid #1e293b;">
+<span style="color: #cbd5e1; font-weight: 500;">Demo Scenario: Sarah's Friday</span>
+<button onclick="loadSarahIfThen()" style="padding: 6px 12px; background: rgba(45,212,191,0.2); color: #2dd4bf; border-radius: 8px; font-weight: 600; border: none;">Load Example</button>
+</div>
+<p style="color: #94a3b8; line-height: 1.5; margin: 0;">Plan your response to a high-risk moment before it happens, so you're not deciding from scratch while under pressure.</p>
+<div style="display: flex; flex-direction: column; gap: 4px;">
+<label class="label">If (the situation)</label>
+<textarea id="if-situation" rows="2" placeholder="If I feel like isolating on a Friday night..."></textarea>
+</div>
+<div style="display: flex; flex-direction: column; gap: 4px;">
+<label class="label">Then (my planned response)</label>
+<textarea id="if-response" rows="2" placeholder="Then I will call my sponsor or go to a meeting instead."></textarea>
+</div>
+<button onclick="saveIfThen()" class="ghost-btn">Save Action Plan</button>
+<div id="ifthen-list" style="display: flex; flex-direction: column; gap: 8px; max-height: 220px; overflow-y: auto;"></div>
+</div>
+
+<!-- CHECK-IN TAB -->
+<div id="p-checkin" class="hidden" style="display: flex; flex-direction: column; gap: 16px; font-size: 12px;">
+<div class="card" style="padding: 16px; display: flex; flex-direction: column; gap: 12px;">
+<div style="font-weight: bold; color: #2dd4bf; font-size: 13px;">Daily Check-In</div>
+<div style="display: flex; flex-direction: column; gap: 6px;">
+<label style="color: #94a3b8; text-transform: uppercase; font-size: 10px; display: flex; justify-content: space-between;"><span>Mood (1-10)</span><span id="mood-val" style="color: #2dd4bf; font-weight: bold;">5</span></label>
+<input type="range" id="mood-range" min="1" max="10" value="5" style="accent-color: #2dd4bf; width: 100%;" oninput="document.getElementById('mood-val').innerText=this.value">
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px;">
+<label style="color: #94a3b8; text-transform: uppercase; font-size: 10px; display: flex; justify-content: space-between;"><span>Craving Intensity (0-10)</span><span id="craving-val" style="color: #fb7185; font-weight: bold;">0</span></label>
+<input type="range" id="craving-range" min="0" max="10" value="0" style="accent-color: #fb7185; width: 100%;" oninput="document.getElementById('craving-val').innerText=this.value">
+</div>
+<textarea id="checkin-note" rows="2" placeholder="Today I am focusing on..."></textarea>
+<button onclick="saveCheckIn()" class="primary-btn">Save Check-In</button>
+</div>
+<div id="checkin-list" style="display: flex; flex-direction: column; gap: 8px; max-height: 200px; overflow-y: auto;"></div>
+</div>
+
+<!-- GUIDE TAB -->
+<div id="p-guide" class="hidden" style="display: flex; flex-direction: column; gap: 12px; font-size: 12px; color: #cbd5e1;">
+<div style="background: #0f172a; padding: 16px; border-radius: 12px; border: 1px solid #1e293b; display: flex; flex-direction: column; gap: 8px;">
+<h2 style="color: #2dd4bf; font-size: 13px; margin: 0;">How to Use Your Recovery Toolkit</h2>
+<p style="color: #94a3b8; line-height: 1.5; margin: 0;">When a craving hits or your mind is racing, everything can feel overwhelming. Writing things down outside your head breaks the panic loop. It helps you see that urges always peak and pass, thoughts are just thoughts, and you never have to act on autopilot.</p>
+<p style="color: #94a3b8; line-height: 1.5; margin: 0;"><b>The Surfer:</b> Use the 90-second breathing timer to ride out acute cravings safely.</p>
+<p style="color: #94a3b8; line-height: 1.5; margin: 0;"><b>The ABCDE Log:</b> Separate what happened from what you told yourself, then actively challenge that belief (D) and write a more useful one (E).</p>
+<p style="color: #94a3b8; line-height: 1.5; margin: 0;"><b>The CBA Matrix:</b> Weigh the short-term relief of using against the long-term cost, and the short-term discomfort of not using against the long-term gain.</p>
+<p style="color: #94a3b8; line-height: 1.5; margin: 0;"><b>Values Check:</b> Step back from the urge and ask whether acting on it moves you toward, or away from, the person you want to be.</p>
+<p style="color: #94a3b8; line-height: 1.5; margin: 0;"><b>If/Then:</b> Decide your response to a high-risk situation in advance, so you're not deciding from scratch while under pressure.</p>
+</div>
+<div style="background: #0f172a; padding: 16px; border-radius: 12px; border: 1px solid #1e293b; display: flex; flex-direction: column; gap: 10px;">
+<h2 style="color: #2dd4bf; font-size: 13px; margin: 0;">Backup & Restore</h2>
+<p style="color: #94a3b8; line-height: 1.5; margin: 0;">Your data lives only on this device and nowhere else. If you're changing phones, or just want a copy for safekeeping, export it as a file you control.</p>
+<button onclick="exportData()" class="ghost-btn">Export My Data</button>
+<input type="file" accept="application/json" onchange="importData(event)" style="display:none;" id="import-input">
+<button onclick="document.getElementById('import-input').click()" style="width:100%;background:#0f172a;color:#94a3b8;border:1px solid #1e293b;font-weight:bold;padding:10px;border-radius:12px;">Restore From File</button>
+</div>
+</div>
+
+<script>
+function tab(t){
+  const ids = ['urge', 'abcde', 'cba', 'hov', 'ifthen', 'checkin', 'guide'];
+  const btnIds = ['bu', 'ba', 'bc', 'bh', 'bi', 'bk', 'bg'];
+  ids.forEach(id => {
+      let el = document.getElementById('p-'+id);
+      if(el) el.classList.toggle('hidden', id!==t);
+  });
+  btnIds.forEach((btnId, idx) => {
+      let b = document.getElementById(btnId);
+      b.style.background = ids[idx]===t ? '#1e293b' : 'transparent';
+      b.style.color = ids[idx]===t ? '#2dd4bf' : '#94a3b8';
+  });
+}
+
+let chart = null, data = Array(20).fill(0);
+try {
+    const ctx = document.getElementById('c').getContext('2d');
+    chart = new Chart(ctx, {
+        type:'line',
+        data:{labels:Array(20).fill(''),datasets:[{data:data,borderColor:'#2dd4bf',borderWidth:2,tension:0.4,fill:true,backgroundColor:'rgba(45,212,191,0.06)'}]},
+        options:{responsive:true,maintainAspectRatio:false,scales:{x:{display:false},y:{min:0,max:10,grid:{color:'rgba(255,255,255,0.03)'}}},plugins:{legend:{display:false}}}
+    });
+} catch(e) {}
+
+let audioCtx, noiseNode, filterNode, gainNode;
+async function startNatureSound() {
+    try {
+        stopNatureSound();
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if(audioCtx.state === 'suspended') { await audioCtx.resume(); }
+        const bufferSize = audioCtx.sampleRate * 3;
+        const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+        const output = buffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) { output[i] = Math.random() * 2 - 1; }
+        noiseNode = audioCtx.createBufferSource();
+        noiseNode.buffer = buffer;
+        noiseNode.loop = true;
+        filterNode = audioCtx.createBiquadFilter();
+        filterNode.type = 'lowpass';
+        filterNode.frequency.value = 350;
+        gainNode = audioCtx.createGain();
+        gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+        noiseNode.connect(filterNode);
+        filterNode.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+        noiseNode.start();
+    } catch(e) {}
+}
+
+function stopNatureSound() {
+    try {
+        if(noiseNode) { noiseNode.stop(); noiseNode = null; }
+        if(audioCtx && audioCtx.state !== 'closed') { audioCtx.close(); audioCtx = null; }
+    } catch(e) {}
+}
+
+// Voice layer: tries a pre-recorded clip first (audio/<key>.mp3), falls
+// back to the browser's built-in speech synthesis if the file is missing.
+// Drop real mp3 files into an "audio" folder next to this HTML file to
+// upgrade the voice with no code changes needed.
+function speak(text){
+  try {
+      if(!document.getElementById('voice-toggle').checked) return;
+      if('speechSynthesis' in window){
+          window.speechSynthesis.cancel();
+          let utterance = new SpeechSynthesisUtterance(text);
+          utterance.rate = 0.85;
+          utterance.pitch = 1.0;
+          window.speechSynthesis.speak(utterance);
+      }
+  } catch(e) {}
+}
+
+function playCue(key, fallbackText){
+  try {
+      if(!document.getElementById('voice-toggle').checked) return;
+      let resolved = false;
+      const audio = new Audio('audio/' + key + '.mp3');
+      const fallback = () => { if(!resolved){ resolved = true; speak(fallbackText); } };
+      audio.addEventListener('error', fallback);
+      const playPromise = audio.play();
+      if(playPromise !== undefined){
+          playPromise.then(() => { resolved = true; }).catch(fallback);
+      }
+  } catch(e) { speak(fallbackText); }
+}
+
+function initStats() {
+    try {
+        let stats = JSON.parse(localStorage.getItem('smart_stats') || '{"streak": 1, "surfed": 0, "lastDate": ""}');
+        let today = new Date().toDateString();
+        if (stats.lastDate !== today) {
+            let last = stats.lastDate ? new Date(stats.lastDate) : null;
+            let now = new Date(today);
+            if (last) {
+                let diffDays = Math.round((now - last) / (1000 * 60 * 60 * 24));
+                if (diffDays === 1) { stats.streak += 1; stats.lastDate = today; }
+                else if (diffDays > 1) { stats.streak = 1; stats.lastDate = today; }
+            } else { stats.streak = 1; stats.lastDate = today; }
+            localStorage.setItem('smart_stats', JSON.stringify(stats));
+        }
+        document.getElementById('streak-count').innerText = stats.streak + (stats.streak === 1 ? ' Day' : ' Days');
+        document.getElementById('surfed-count').innerText = stats.surfed;
+    } catch(e) {}
+}
+
+function recordSurfed() {
+    try {
+        let stats = JSON.parse(localStorage.getItem('smart_stats') || '{"streak": 1, "surfed": 0, "lastDate": ""}');
+        stats.surfed += 1;
+        localStorage.setItem('smart_stats', JSON.stringify(stats));
+        document.getElementById('surfed-count').innerText = stats.surfed;
+    } catch(e) {}
+}
+
+let tInt;
+function startWave(isPanic){
+  clearInterval(tInt);
+  stopNatureSound();
+  startNatureSound();
+  let s=90, tick=0;
+  document.getElementById('ws').innerText="Rising...";
+
+  if(isPanic){ playCue('panic', "Stop. Take a deep breath. You are safe right now. This feeling will pass, just like it always does."); }
+  else { playCue('rising', "Well done for taking a moment for yourself. Take a slow, deep breath, and let the wave rise safely."); }
+
+  tInt=setInterval(()=>{
+    s--; tick++;
+    document.getElementById('timer').innerText=s;
+    let val = tick<=10? (tick/10)*8 : (tick<=20? 8-((tick-10)/10)*5 : 3);
+    data.shift(); data.push(Math.max(0, val + Math.random()*0.4));
+    if(chart) chart.update();
+
+    if(s === 60) { document.getElementById('ws').innerText="Holding Peak"; playCue('peak', "You're doing wonderfully. Keep breathing steadily. The wave is peaking now, but you're safe and in control."); }
+    if(s === 30) { document.getElementById('ws').innerText="Subsided"; playCue('subsiding', "The urge is starting to subside. Notice how your body is beginning to relax."); }
+    if(s <= 0){
+      clearInterval(tInt);
+      stopNatureSound();
+      document.getElementById('ws').innerText="Done";
+      recordSurfed();
+      playCue('done', "The wave has passed. Well done. You handled that, and you can handle whatever comes next.");
+    }
+  },1000);
+}
+
+function emergencyPanic() {
+    tab('urge');
+    startWave(true);
+}
+
+function loadSueABCDE() {
+    document.getElementById('aa').value = "Minor argument at work.";
+    document.getElementById('ab').value = "I can't handle this stress, I'm broken.";
+    document.getElementById('ac').value = "Chest tightness and strong urge.";
+    document.getElementById('ad').value = "Is that actually true? Have I handled stress like this before and got through it?";
+    document.getElementById('ae').value = "This is uncomfortable, not unbearable. I can feel this and still choose not to act on it.";
+}
+
+function saveABCDE(){
+  const a=document.getElementById('aa').value, b=document.getElementById('ab').value, c=document.getElementById('ac').value;
+  const d=document.getElementById('ad').value, e=document.getElementById('ae').value;
+  if(!a||!b||!c) { alert("Fill in A, B and C to save (D and E are optional)"); return; }
+  let logs = JSON.parse(localStorage.getItem('abc')||'[]');
+  logs.unshift({a,b,c,d,e,time:new Date().toLocaleTimeString()});
+  localStorage.setItem('abc', JSON.stringify(logs));
+  renderABCDE();
+  alert("Saved!");
+}
+
+function renderABCDE(){
+  try {
+      const logs = JSON.parse(localStorage.getItem('abc')||'[]');
+      document.getElementById('abc-list').innerHTML = logs.map(l=>`<div style="background: #0f172a; padding: 12px; border-radius: 12px; border: 1px solid #1e293b; display: flex; flex-direction: column; gap: 4px;"><div style="font-size: 10px; color: #64748b;">${l.time}</div><div><b style="color: #fb7185;">A:</b> ${l.a}</div><div><b style="color: #fbbf24;">B:</b> ${l.b}</div><div><b style="color: #34d399;">C:</b> ${l.c}</div>${l.d ? `<div><b style="color: #93c5fd;">D:</b> ${l.d}</div>` : ''}${l.e ? `<div><b style="color: #2dd4bf;">E:</b> ${l.e}</div>` : ''}</div>`).join('');
+  } catch(e) {}
+}
+
+function loadSueCBA() {
+    document.getElementById('cb1').value = "Immediate numbing";
+    document.getElementById('cb2').value = "Regret and guilt";
+    document.getElementById('cb3').value = "Waking up clear-headed";
+    document.getElementById('cb4').value = "Emotional friction";
+}
+
+// Older versions of this app stored a single CBA object rather than a
+// history list. This upgrades any existing saved matrix into the new
+// list format the first time the app loads, so nothing is lost.
+function migrateCBA(){
+    try {
+        const raw = localStorage.getItem('cba');
+        if(!raw) return;
+        const parsed = JSON.parse(raw);
+        if(!Array.isArray(parsed)){
+            localStorage.setItem('cba', JSON.stringify([parsed]));
+        }
+    } catch(e) {}
+}
+
+function saveCBA(){
+  const v1=document.getElementById('cb1').value, v2=document.getElementById('cb2').value, v3=document.getElementById('cb3').value, v4=document.getElementById('cb4').value;
+  if(!v1||!v2||!v3||!v4) { alert("Fill all fields"); return; }
+  let logs = JSON.parse(localStorage.getItem('cba')||'[]');
+  logs.unshift({v1,v2,v3,v4,time:new Date().toLocaleTimeString()});
+  localStorage.setItem('cba', JSON.stringify(logs));
+  renderCBAHistory();
+  alert("Saved!");
+}
+
+function renderCBAHistory(){
+  try {
+      const logs = JSON.parse(localStorage.getItem('cba')||'[]');
+      document.getElementById('cba-disp').innerHTML = logs.map(m=>`<div style="background: #0f172a; padding: 12px; border-radius: 12px; border: 1px solid #1e293b; font-size: 11px;"><b>${m.time}</b><br><span style="color: #2dd4bf;">+ Use:</span> ${m.v1}<br><span style="color: #fb7185;">- Use:</span> ${m.v2}<br><span style="color: #34d399;">+ Not:</span> ${m.v3}<br><span style="color: #fbbf24;">- Not:</span> ${m.v4}</div>`).join('');
+  } catch(e) {}
+}
+
+const VALUES = ['Health','Family','Relationships','Career','Self-Respect','Peace of Mind','Freedom','Growth'];
+let selectedValues = [];
+
+function renderValueChips(){
+  const c = document.getElementById('value-chips');
+  c.innerHTML = VALUES.map(v => `<button onclick="toggleValue('${v}')" class="chip${selectedValues.includes(v) ? ' active' : ''}">${v}</button>`).join('');
+}
+
+function toggleValue(v){
+  if(selectedValues.includes(v)) selectedValues = selectedValues.filter(x=>x!==v);
+  else selectedValues.push(v);
+  renderValueChips();
+}
+
+function loadLiamHOV(){
+  selectedValues = ['Health','Self-Respect'];
+  renderValueChips();
+  document.getElementById('hov-reflection').value = "Using this afternoon would give me a few hours of numbing but I'd lose the clear head and self-respect I'd otherwise wake up with tomorrow.";
+}
+
+function saveHOV(){
+  const reflection = document.getElementById('hov-reflection').value;
+  if(!reflection) { alert("Add a reflection to save"); return; }
+  let logs = JSON.parse(localStorage.getItem('hov')||'[]');
+  logs.unshift({values:[...selectedValues], reflection, time:new Date().toLocaleTimeString()});
+  localStorage.setItem('hov', JSON.stringify(logs));
+  document.getElementById('hov-reflection').value = '';
+  selectedValues = [];
+  renderValueChips();
+  renderHOV();
+  alert("Saved!");
+}
+
+function renderHOV(){
+  try {
+      const logs = JSON.parse(localStorage.getItem('hov')||'[]');
+      document.getElementById('hov-list').innerHTML = logs.map(l=>`<div style="background: #0f172a; padding: 12px; border-radius: 12px; border: 1px solid #1e293b;"><div style="font-size: 10px; color: #64748b;">${l.time}</div><div style="color: #2dd4bf; font-weight: 600; margin: 4px 0;">${(l.values||[]).join(', ')}</div><div>${l.reflection}</div></div>`).join('');
+  } catch(e) {}
+}
+
+function loadSarahIfThen(){
+  document.getElementById('if-situation').value = "If I feel like isolating on a Friday night";
+  document.getElementById('if-response').value = "Then I will call my sponsor or go to a meeting instead of staying home alone.";
+}
+
+function saveIfThen(){
+  const situation = document.getElementById('if-situation').value;
+  const response = document.getElementById('if-response').value;
+  if(!situation || !response) { alert("Fill in both fields to save"); return; }
+  let logs = JSON.parse(localStorage.getItem('ifthen')||'[]');
+  logs.unshift({situation, response, time: new Date().toLocaleTimeString()});
+  localStorage.setItem('ifthen', JSON.stringify(logs));
+  document.getElementById('if-situation').value = '';
+  document.getElementById('if-response').value = '';
+  renderIfThen();
+  alert("Saved!");
+}
+
+function renderIfThen(){
+  try {
+      const logs = JSON.parse(localStorage.getItem('ifthen')||'[]');
+      document.getElementById('ifthen-list').innerHTML = logs.map(l=>`<div style="background: #0f172a; padding: 12px; border-radius: 12px; border: 1px solid #1e293b;"><div style="font-size: 10px; color: #64748b;">${l.time}</div><div><b style="color: #fbbf24;">If:</b> ${l.situation}</div><div><b style="color: #2dd4bf;">Then:</b> ${l.response}</div></div>`).join('');
+  } catch(e) {}
+}
+
+function saveCheckIn(){
+  const mood = document.getElementById('mood-range').value;
+  const craving = document.getElementById('craving-range').value;
+  const note = document.getElementById('checkin-note').value;
+  let checkins = JSON.parse(localStorage.getItem('smart_checkins')||'[]');
+  checkins.unshift({mood, craving, note, date: new Date().toLocaleDateString(), time: new Date().toLocaleTimeString()});
+  localStorage.setItem('smart_checkins', JSON.stringify(checkins));
+  renderCheckIns();
+  alert("Saved!");
+}
+
+function renderCheckIns(){
+  try {
+      const checkins = JSON.parse(localStorage.getItem('smart_checkins')||'[]');
+      document.getElementById('checkin-list').innerHTML = checkins.map(c=>`<div style="background: #0f172a; padding: 12px; border-radius: 12px; border: 1px solid #1e293b;"><div style="font-size: 10px; color: #64748b;">${c.date} ${c.time} - Mood: ${c.mood}/10 | Craving: ${c.craving}/10</div>${c.note ? `<div>"${c.note}"</div>` : ''}</div>`).join('');
+  } catch(e) {}
+}
+
+function exportData(){
+  try {
+      const keys = ['abc','cba','hov','ifthen','smart_checkins','smart_stats'];
+      const bundle = { _exportedAt: new Date().toISOString() };
+      keys.forEach(k => { const v = localStorage.getItem(k); if(v !== null) bundle[k] = JSON.parse(v); });
+      const blob = new Blob([JSON.stringify(bundle, null, 2)], {type: 'application/json'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'smart-recovery-backup-' + new Date().toISOString().slice(0,10) + '.json';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+  } catch(e) { alert('Export failed: ' + e.message); }
+}
+
+function importData(event){
+  const file = event.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e){
+    try {
+      const bundle = JSON.parse(e.target.result);
+      if(!confirm('This will replace your current data with the backup. Continue?')) return;
+      ['abc','cba','hov','ifthen','smart_checkins','smart_stats'].forEach(k => {
+          if(bundle[k] !== undefined) localStorage.setItem(k, JSON.stringify(bundle[k]));
+      });
+      migrateCBA();
+      renderABCDE();
+      renderCBAHistory();
+      renderHOV();
+      renderIfThen();
+      renderCheckIns();
+      initStats();
+      alert('Data restored.');
+    } catch(err) { alert('That file could not be read as a backup.'); }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
+}
+
+migrateCBA();
+renderABCDE();
+renderCBAHistory();
+renderValueChips();
+renderHOV();
+renderIfThen();
+renderCheckIns();
+initStats();
+</script>
+</body>
+</html>
