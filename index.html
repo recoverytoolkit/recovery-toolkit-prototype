@@ -24,6 +24,13 @@
 </style>
 </head>
 <body>
+ <div id="lock-screen" style="display:none; position:fixed; inset:0; background:#020617; z-index:9999; flex-direction:column; align-items:center; justify-content:center; gap:16px; padding:24px;">
+<div style="color:#2dd4bf; font-size:14px; font-weight:bold;">Recovery Toolkit is locked</div>
+<input type="password" inputmode="numeric" pattern="[0-9]*" maxlength="6" id="unlock-input" placeholder="Enter code" onkeydown="if(event.key==='Enter') attemptUnlock()" style="width:180px; text-align:center; font-size:18px; padding:10px; border-radius:10px; border:1px solid #1e293b; background:#0f172a; color:#e2e8f0;">
+<button onclick="attemptUnlock()" style="width:180px; background:#2dd4bf; color:#020617; font-weight:bold; padding:10px; border-radius:10px; border:none;">Unlock</button>
+<div id="unlock-error" style="color:#f87171; font-size:12px; min-height:14px;"></div>
+<button onclick="emergencyBypass()" style="background:none; border:none; color:#f87171; font-size:12px; text-decoration:underline; margin-top:12px;">I need help right now — skip to Panic Mode</button>
+ </div>
 <header style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 16px; border-bottom: 1px solid rgba(30,41,59,0.8); margin-bottom: 20px; gap: 10px;">
 <h1 style="font-weight: bold; color: #2dd4bf; font-size: 14px; margin: 0; flex-shrink: 0;">Recovery Toolkit</h1>
 <div class="navbar">
@@ -182,9 +189,63 @@
 <input type="file" accept="application/json" onchange="importData(event)" style="display:none;" id="import-input">
 <button onclick="document.getElementById('import-input').click()" style="width:100%;background:#0f172a;color:#94a3b8;border:1px solid #1e293b;font-weight:bold;padding:10px;border-radius:12px;">Restore From File</button>
 </div>
+ <div style="background: #0f172a; padding: 16px; border-radius: 12px; border: 1px solid #1e293b; display: flex; flex-direction: column; gap: 10px;">
+<h2 style="color: #2dd4bf; font-size: 13px; margin: 0;">App Lock (Optional)</h2>
+<p style="color: #94a3b8; line-height: 1.5; margin: 0;">Set a code so this app doesn't open without it, in case someone else picks up this phone. This is a privacy screen, not encryption — it keeps casual eyes out, not a determined search of the device.</p>
+<div id="lock-status" style="color:#94a3b8; font-size:11px;"></div>
+<input type="password" inputmode="numeric" pattern="[0-9]*" maxlength="6" id="lock-code-input" placeholder="Set a 4-6 digit code" style="width:100%; box-sizing:border-box; padding:10px; border-radius:10px; border:1px solid #1e293b; background:#0f172a; color:#e2e8f0;">
+<button onclick="saveLockCode()" class="ghost-btn">Save Code</button>
+<button onclick="removeLockCode()" style="width:100%;background:#0f172a;color:#94a3b8;border:1px solid #1e293b;font-weight:bold;padding:10px;border-radius:12px;">Remove Code</button>
+ </div>
 </div>
 
 <script>
+ async function sha256Hex(str){
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+function updateLockStatus(){
+  const has = !!localStorage.getItem('smart_lock_hash');
+  const el = document.getElementById('lock-status');
+  if(el) el.innerText = has ? 'A code is currently set.' : 'No code set yet.';
+}
+async function saveLockCode(){
+  const val = document.getElementById('lock-code-input').value.trim();
+  if(!/^\d{4,6}$/.test(val)){ alert('Enter a 4 to 6 digit code.'); return; }
+  localStorage.setItem('smart_lock_hash', await sha256Hex(val));
+  document.getElementById('lock-code-input').value = '';
+  updateLockStatus();
+  alert('Code saved.');
+}
+function removeLockCode(){
+  localStorage.removeItem('smart_lock_hash');
+  sessionStorage.removeItem('smart_unlocked');
+  updateLockStatus();
+  alert('Code removed.');
+}
+function checkLock(){
+  updateLockStatus();
+  const hash = localStorage.getItem('smart_lock_hash');
+  if(!hash || sessionStorage.getItem('smart_unlocked') === '1') return;
+  document.getElementById('lock-screen').style.display = 'flex';
+}
+async function attemptUnlock(){
+  const val = document.getElementById('unlock-input').value.trim();
+  const match = await sha256Hex(val) === localStorage.getItem('smart_lock_hash');
+  if(match){
+    sessionStorage.setItem('smart_unlocked','1');
+    document.getElementById('lock-screen').style.display = 'none';
+    document.getElementById('unlock-error').innerText = '';
+  } else {
+    document.getElementById('unlock-error').innerText = 'Incorrect code, try again.';
+  }
+  document.getElementById('unlock-input').value = '';
+}
+function emergencyBypass(){
+  sessionStorage.setItem('smart_unlocked','1');
+  document.getElementById('lock-screen').style.display = 'none';
+  emergencyPanic();
+}
 function tab(t){
   const ids = ['urge', 'abcde', 'cba', 'hov', 'ifthen', 'checkin', 'guide'];
   const btnIds = ['bu', 'ba', 'bc', 'bh', 'bi', 'bk', 'bg'];
@@ -532,6 +593,7 @@ renderHOV();
 renderIfThen();
 renderCheckIns();
 initStats();
+ checkLock();
 </script>
 </body>
 </html>
