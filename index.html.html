@@ -1,0 +1,1325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recovery Toolkit (2026 Edition)</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
+        }
+
+        /* Animated Breathing Circle for Urge Surfer */
+        @keyframes breatheGlow {
+            0%, 100% {
+                transform: scale(0.85);
+                box-shadow: 0 0 20px rgba(13, 148, 136, 0.2), inset 0 0 15px rgba(13, 148, 136, 0.2);
+                border-color: #0d9488;
+                background-color: rgba(13, 148, 136, 0.08);
+            }
+            50% {
+                transform: scale(1.18);
+                box-shadow: 0 0 45px rgba(56, 189, 248, 0.5), inset 0 0 25px rgba(56, 189, 248, 0.3);
+                border-color: #38bdf8;
+                background-color: rgba(56, 189, 248, 0.15);
+            }
+        }
+
+        .breathing-active {
+            animation: breatheGlow 7s ease-in-out infinite;
+        }
+
+        /* Optimized CSS for High-Quality Single-Page PDF Export */
+        .pdf-page {
+            background-color: #ffffff;
+            color: #1e293b;
+            padding: 16px 24px;
+            font-size: 10px;
+            line-height: 1.35;
+            box-sizing: border-box;
+            width: 100%;
+        }
+        .pdf-header {
+            border-bottom: 2px solid #0d9488;
+            padding-bottom: 4px;
+            margin-bottom: 8px;
+        }
+        .pdf-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 4px;
+            margin-bottom: 6px;
+        }
+        .pdf-table th {
+            background-color: #0d9488;
+            color: #ffffff;
+            text-align: left;
+            padding: 4px 6px;
+            font-size: 9.5px;
+            font-weight: 600;
+        }
+        .pdf-table td {
+            border-bottom: 1px solid #e2e8f0;
+            padding: 4px 6px;
+            font-size: 9px;
+            vertical-align: top;
+        }
+        .pdf-table tr:nth-child(even) td {
+            background-color: #f8fafc;
+        }
+        .pdf-section-title {
+            font-size: 11px;
+            font-weight: 700;
+            color: #0f172a;
+            margin-top: 6px;
+            margin-bottom: 3px;
+            border-bottom: 1px solid #cbd5e1;
+            padding-bottom: 1px;
+        }
+        .pdf-footer {
+            margin-top: 8px;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 4px;
+            font-size: 8.5px;
+            color: #94a3b8;
+            display: flex;
+            justify-content: space-between;
+        }
+        .example-box {
+            background-color: #f1f5f9;
+            border-left: 3px solid #0d9488;
+            padding: 5px 8px;
+            margin: 4px 0;
+            border-radius: 2px;
+            font-size: 9px;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between">
+
+    <div>
+        <!-- Navigation Bar -->
+        <header class="bg-slate-900/80 backdrop-blur border-b border-slate-800 sticky top-0 z-50">
+            <div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-4">
+                <div class="flex items-center space-x-3">
+                    <div class="bg-gradient-to-tr from-teal-600 to-emerald-400 p-2 rounded-xl shadow-lg shadow-teal-500/20 text-slate-950">
+                        <i data-lucide="shield-heart" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold tracking-tight text-white flex items-center gap-2">
+                            Recovery Toolkit
+                            <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-teal-500/10 text-teal-400 border border-teal-500/20">2026</span>
+                        </h1>
+                    </div>
+                </div>
+                
+                <nav class="flex items-center space-x-1 sm:space-x-2 text-sm font-medium">
+                    <button onclick="switchTab('surfer')" id="tab-surfer" class="px-3 py-2 rounded-lg transition text-slate-400 hover:text-white flex items-center gap-1.5">
+                        <i data-lucide="waves" class="w-4 h-4"></i>
+                        <span>Surfer</span>
+                    </button>
+                    <button onclick="switchTab('abcde')" id="tab-abcde" class="px-3 py-2 rounded-lg transition text-slate-400 hover:text-white flex items-center gap-1.5">
+                        <i data-lucide="brain" class="w-4 h-4"></i>
+                        <span>ABCDE</span>
+                    </button>
+                    <button onclick="switchTab('cba')" id="tab-cba" class="px-3 py-2 rounded-lg transition text-slate-400 hover:text-white flex items-center gap-1.5">
+                        <i data-lucide="scale" class="w-4 h-4"></i>
+                        <span>CBA</span>
+                    </button>
+                    <button onclick="switchTab('values')" id="tab-values" class="px-3 py-2 rounded-lg transition text-slate-400 hover:text-white flex items-center gap-1.5">
+                        <i data-lucide="compass" class="w-4 h-4"></i>
+                        <span>Values</span>
+                    </button>
+                    <button onclick="switchTab('checkin')" id="tab-checkin" class="px-3 py-2 rounded-lg transition text-slate-400 hover:text-white flex items-center gap-1.5">
+                        <i data-lucide="calendar-check" class="w-4 h-4"></i>
+                        <span>Check-In</span>
+                    </button>
+                    <button onclick="switchTab('guide')" id="tab-guide" class="px-3 py-2 rounded-lg transition text-slate-400 hover:text-white flex items-center gap-1.5">
+                        <i data-lucide="book-open" class="w-4 h-4"></i>
+                        <span>Guide</span>
+                    </button>
+                </nav>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="max-w-4xl mx-auto w-full px-4 py-8">
+            
+            <!-- Tab 1: Urge Surfer with Animated Breathing Focal Circle -->
+            <section id="content-surfer" class="tab-content hidden space-y-6">
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-10 text-center space-y-8 shadow-xl">
+                    <div class="max-w-md mx-auto space-y-2">
+                        <h2 class="text-2xl font-bold text-white tracking-tight">Urge Surfing Focus</h2>
+                        <p class="text-slate-400 text-sm leading-relaxed">
+                            Urges reach a peak and naturally pass like ocean waves. Focus on the breathing circle below to ground yourself while the wave subsides.
+                        </p>
+                    </div>
+
+                    <!-- Animated Breathing Focal Circle Container -->
+                    <div class="bg-slate-950/80 border border-slate-800/80 rounded-2xl p-8 flex flex-col items-center justify-center min-h-[320px] relative overflow-hidden">
+                        
+                        <!-- Visual Breathing Focus Circle -->
+                        <div id="breathing-orb" class="w-40 h-40 rounded-full border-2 border-teal-500/60 flex items-center justify-center transition-all duration-700 bg-gradient-to-br from-teal-500/10 to-sky-500/10 relative">
+                            <div class="w-28 h-28 rounded-full bg-teal-400/10 border border-teal-400/30 flex items-center justify-center">
+                                <i data-lucide="wind" id="orb-icon" class="w-10 h-10 text-teal-400 transition-transform duration-700"></i>
+                            </div>
+                        </div>
+
+                        <p id="timer-display" class="mt-6 text-4xl font-mono font-bold text-white tracking-wider">01:30</p>
+                        <p id="surfer-status" class="text-xs font-semibold text-teal-400 uppercase tracking-widest mt-2">Ready when you are</p>
+                    </div>
+
+                    <div class="flex justify-center gap-4">
+                        <button id="start-wave-btn" onclick="toggleWaveTimer()" class="bg-teal-500 hover:bg-teal-400 text-slate-950 font-semibold px-8 py-3 rounded-xl transition-all shadow-lg shadow-teal-500/20 flex items-center gap-2">
+                            <i data-lucide="play" class="w-5 h-5"></i> Start 90s Wave
+                        </button>
+                    </div>
+                    <div class="flex flex-wrap justify-center gap-3 text-xs text-slate-300">
+                        <label class="flex items-center gap-2">Sound
+                            <select id="sound-scene" onchange="saveSoundPrefs()" class="bg-slate-900 border border-slate-700 rounded-lg px-2 py-1.5 text-white">
+                                <option value="ocean">Ocean waves</option>
+                                <option value="oceanpad">Ocean + soft pad</option>
+                                <option value="rain">Gentle rain</option>
+                                <option value="wind">Soft wind</option>
+                                <option value="pad">Calm pad</option>
+                                <option value="off">Silent</option>
+                            </select>
+                        </label>
+                        <label class="flex items-center gap-2">Voice
+                            <select id="voice-mode" onchange="saveSoundPrefs()" class="bg-slate-900 border border-slate-700 rounded-lg px-2 py-1.5 text-white">
+                                <option value="device">Calm spoken guide</option>
+                                <option value="mp3">My recordings</option>
+                                <option value="off">Off</option>
+                            </select>
+                        </label>
+                    </div>
+                    <p class="text-xs text-slate-500">Turn your volume up, then tap Start. A different guide is chosen each time.</p>
+                </div>
+            </section>
+
+            <!-- Tab 2: ABCDE Journal -->
+            <section id="content-abcde" class="tab-content hidden space-y-6">
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 space-y-6 shadow-xl">
+                    <div>
+                        <h2 class="text-xl font-bold text-white">Thought Unpacker (ABCDE)</h2>
+                        <p class="text-slate-400 text-sm">Dissect automatic triggers and ground your thoughts in reality.</p>
+                    </div>
+
+                    <!-- Guided Example Box -->
+                    <div class="bg-slate-950 border-l-4 border-teal-500 p-4 rounded-r-xl space-y-2 text-xs text-slate-300">
+                        <div class="font-semibold text-teal-400 uppercase tracking-wider text-[11px]">Practical Example Scenario</div>
+                        <p><strong>A (Trigger):</strong> Finished an overwhelming project late at night.</p>
+                        <p><strong>B (Belief):</strong> "I worked so hard, I deserve a drink/vape to relax, or I won't sleep."</p>
+                        <p><strong>C (Consequence):</strong> Tight chest, intense urge, anxiety (8/10).</p>
+                        <p><strong>D (Reality Check):</strong> "Giving in will ruin my sleep quality and increase my anxiety tomorrow morning. I've relaxed without it before."</p>
+                        <p><strong>E (New Focus):</strong> "I will drink chamomile tea, take a warm shower, and let the urge wave pass."</p>
+                    </div>
+
+                    <form id="abcde-form" onsubmit="saveAbcdeEntry(event)" class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">A - Trigger / Activating Event</label>
+                            <input type="text" id="abcde-a" required placeholder="e.g., Stressful work meeting, feeling lonely or bored..." class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-teal-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">B - Beliefs / Automatic Thoughts</label>
+                            <textarea id="abcde-b" rows="2" placeholder="e.g., 'I need this right now to feel better' or 'Just once won't hurt'..." class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-teal-500"></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">C - Consequences & Feelings</label>
+                            <input type="text" id="abcde-c" placeholder="e.g., Anxious, tight chest, urge intensity 8/10..." class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-teal-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">D - Reality Check / Gentle Challenge</label>
+                            <textarea id="abcde-d" rows="2" placeholder="e.g., 'Is this thought 100% true? What happened last time I gave in?'..." class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-teal-500"></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">E - New Balanced Perspective</label>
+                            <input type="text" id="abcde-e" placeholder="e.g., 'This feeling is temporary. I am in control and choosing my health.'" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-teal-500">
+                        </div>
+                        <button type="submit" class="bg-teal-500 hover:bg-teal-400 text-slate-950 font-semibold px-6 py-2.5 rounded-lg text-sm transition">Save Thought Entry</button>
+                    </form>
+
+                    <div class="border-t border-slate-800 pt-6">
+                        <h3 class="text-sm font-semibold text-white mb-3">Saved Reflections</h3>
+                        <div id="abcde-list" class="space-y-3 text-sm"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tab 3: CBA Matrix -->
+            <section id="content-cba" class="tab-content hidden space-y-6">
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 space-y-6 shadow-xl">
+                    <div>
+                        <h2 class="text-xl font-bold text-white">Cost-Benefit Analysis (CBA) Matrix</h2>
+                        <p class="text-slate-400 text-sm">Weigh short-term relief against long-term peace of mind.</p>
+                    </div>
+
+                    <!-- Guided Example Box -->
+                    <div class="bg-slate-950 border-l-4 border-teal-500 p-4 rounded-r-xl space-y-2 text-xs text-slate-300">
+                        <div class="font-semibold text-teal-400 uppercase tracking-wider text-[11px]">Practical Decisional Balance Example</div>
+                        <p><strong>Pros of Giving In:</strong> Instant relief, temporary escape from boredom or stress.</p>
+                        <p><strong>Cons of Giving In:</strong> Guilt, broken streak, grogginess, increased anxiety tomorrow.</p>
+                        <p><strong>Pros of Stepping Back:</strong> Self-respect, pride, better morning clarity, long-term health.</p>
+                        <p><strong>Cons of Stepping Back:</strong> Temporary physical restlessness for 10-15 minutes while the wave subsides.</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl space-y-2">
+                            <h4 class="text-xs font-bold text-teal-400 uppercase">Pros of Giving In (Short-Term)</h4>
+                            <p class="text-xs text-slate-400">e.g., Short-term relief, instant escape, temporary comfort...</p>
+                            <textarea id="cba-pros-givein" onchange="saveCbaData()" rows="3" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-teal-500" placeholder="Type your thoughts here..."></textarea>
+                        </div>
+                        <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl space-y-2">
+                            <h4 class="text-xs font-bold text-rose-400 uppercase">Cons of Giving In (Long-Term)</h4>
+                            <p class="text-xs text-slate-400">e.g., Guilt, lost progress, health impacts, broken commitments...</p>
+                            <textarea id="cba-cons-givein" onchange="saveCbaData()" rows="3" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-teal-500" placeholder="Type your thoughts here..."></textarea>
+                        </div>
+                        <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl space-y-2">
+                            <h4 class="text-xs font-bold text-teal-400 uppercase">Pros of Stepping Back (Long-Term)</h4>
+                            <p class="text-xs text-slate-400">e.g., Self-respect, improved health, staying in control, peace of mind...</p>
+                            <textarea id="cba-pros-stop" onchange="saveCbaData()" rows="3" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-teal-500" placeholder="Type your thoughts here..."></textarea>
+                        </div>
+                        <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl space-y-2">
+                            <h4 class="text-xs font-bold text-rose-400 uppercase">Cons of Stepping Back (Short-Term)</h4>
+                            <p class="text-xs text-slate-400">e.g., Temporary physical discomfort, riding out the 10-minute wave...</p>
+                            <textarea id="cba-cons-stop" onchange="saveCbaData()" rows="3" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-teal-500" placeholder="Type your thoughts here..."></textarea>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tab 4: Values & Action Plan -->
+            <section id="content-values" class="tab-content hidden space-y-6">
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 space-y-6 shadow-xl">
+                    <div>
+                        <h2 class="text-xl font-bold text-white">Values Check & Action Planner</h2>
+                        <p class="text-slate-400 text-sm">Anchor choices to what matters most and build reliable coping routines.</p>
+                    </div>
+
+                    <!-- Guided Example Box -->
+                    <div class="bg-slate-950 border-l-4 border-teal-500 p-4 rounded-r-xl space-y-2 text-xs text-slate-300">
+                        <div class="font-semibold text-teal-400 uppercase tracking-wider text-[11px]">Practical Values & Implementation Example</div>
+                        <p><strong>Core Values:</strong> Health, Family, Self-Respect, Freedom, Peace.</p>
+                        <p><strong>If / Then Coping Plan:</strong> <em>IF I feel overwhelmed after work &rarr; THEN I will pause and practice Urge Surfing for 90 seconds.</em></p>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl space-y-3">
+                            <h3 class="text-sm font-semibold text-white">Core Values</h3>
+                            <p class="text-xs text-slate-400">What matters most to you? (e.g., Health, Family, Freedom, Peace)</p>
+                            <input type="text" id="user-values" onchange="saveValuesData()" placeholder="e.g., Health, Family, Self-Respect, Freedom, Peace" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-teal-500">
+                        </div>
+
+                        <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl space-y-3">
+                            <h3 class="text-sm font-semibold text-white">If / Then Coping Plan</h3>
+                            <p class="text-xs text-slate-400">Pair high-risk triggers directly with immediate coping actions.</p>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-400 uppercase mb-1">IF Trigger Occurs:</label>
+                                    <input type="text" id="ifthen-if" onchange="saveValuesData()" placeholder="IF (e.g., I feel overwhelmed after work)" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-teal-500">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-400 uppercase mb-1">THEN I Will Execute:</label>
+                                    <input type="text" id="ifthen-then" onchange="saveValuesData()" placeholder="THEN (e.g., I will practice Urge Surfing for 90s)" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-teal-500">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tab 5: Daily Check-In -->
+            <section id="content-checkin" class="tab-content hidden space-y-6">
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 space-y-6 shadow-xl">
+                    <div>
+                        <h2 class="text-xl font-bold text-white">Daily Check-In</h2>
+                        <p class="text-slate-400 text-sm">Track emotional trends and urge intensities over time.</p>
+                    </div>
+
+                    <!-- Guided Example Box -->
+                    <div class="bg-slate-950 border-l-4 border-teal-500 p-4 rounded-r-xl space-y-2 text-xs text-slate-300">
+                        <div class="font-semibold text-teal-400 uppercase tracking-wider text-[11px]">Practical Check-In Example</div>
+                        <p><strong>Mood Rating:</strong> 7/10 &nbsp;|&nbsp; <strong>Urge Intensity:</strong> 2/10</p>
+                        <p><strong>Reflection:</strong> "Felt strong today after morning workout. Urge passed quickly."</p>
+                    </div>
+
+                    <form onsubmit="saveCheckin(event)" class="space-y-4 bg-slate-950 p-5 rounded-xl border border-slate-800">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-medium text-slate-300 mb-1">Mood Rating (1 = Low, 10 = High)</label>
+                                <input type="number" id="checkin-mood" min="1" max="10" value="7" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 text-sm text-white">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-300 mb-1">Urge Intensity (1 = Calm, 10 = Severe)</label>
+                                <input type="number" id="checkin-urge" min="1" max="10" value="2" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 text-sm text-white">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-slate-300 mb-1">Brief Reflection / Notes</label>
+                            <input type="text" id="checkin-note" placeholder="How are you feeling today?" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2.5 text-sm text-white">
+                        </div>
+                        <button type="submit" class="bg-teal-500 hover:bg-teal-400 text-slate-950 font-semibold px-5 py-2 rounded-lg text-xs transition">Save Check-In Entry</button>
+                    </form>
+
+                    <div class="border-t border-slate-800 pt-4">
+                        <h3 class="text-sm font-semibold text-white mb-3">Recent Logs</h3>
+                        <div id="checkin-list" class="space-y-2 text-xs"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tab 6: Guide Hub & Downloads -->
+            <section id="content-guide" class="tab-content hidden space-y-6">
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 space-y-6 shadow-xl">
+                    <div>
+                        <h2 class="text-xl font-bold text-white">Guide Hub & Data Management</h2>
+                        <p class="text-slate-400 text-sm">Download formatted offline manuals or manage your local backup files.</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="bg-slate-950 border border-slate-800 p-5 rounded-xl space-y-3">
+                            <div class="flex items-center gap-2 text-teal-400 font-semibold text-sm">
+                                <i data-lucide="file-text" class="w-5 h-5"></i>
+                                <span>User Guide (PDF)</span>
+                            </div>
+                            <p class="text-xs text-slate-400">Download a formatted, single-page guide with step-by-step strategies and practical examples.</p>
+                            <button onclick="downloadUserGuidePDF()" class="w-full bg-slate-800 hover:bg-slate-700 text-white font-medium text-xs py-2.5 rounded-lg transition flex items-center justify-center gap-2 border border-slate-700">
+                                <i data-lucide="download" class="w-4 h-4"></i> Download User Guide
+                            </button>
+                        </div>
+
+                        <div class="bg-slate-950 border border-slate-800 p-5 rounded-xl space-y-3">
+                            <div class="flex items-center gap-2 text-teal-400 font-semibold text-sm">
+                                <i data-lucide="shield-check" class="w-5 h-5"></i>
+                                <span>Executive Overview (PDF)</span>
+                            </div>
+                            <p class="text-xs text-slate-400">Download the single-page architecture overview detailing privacy, offline storage, and CBT methods.</p>
+                            <button onclick="downloadExecutiveSummaryPDF()" class="w-full bg-slate-800 hover:bg-slate-700 text-white font-medium text-xs py-2.5 rounded-lg transition flex items-center justify-center gap-2 border border-slate-700">
+                                <i data-lucide="download" class="w-4 h-4"></i> Download Overview
+                            </button>
+                        </div>
+
+                        <div class="bg-slate-950 border border-slate-800 p-5 rounded-xl space-y-3">
+                            <div class="flex items-center gap-2 text-teal-400 font-semibold text-sm">
+                                <i data-lucide="database" class="w-5 h-5"></i>
+                                <span>Save Progress File</span>
+                            </div>
+                            <p class="text-xs text-slate-400">Save a private backup copy of all your entries and reflections onto your computer.</p>
+                            <button onclick="exportAppData()" class="w-full bg-slate-800 hover:bg-slate-700 text-white font-medium text-xs py-2.5 rounded-lg transition flex items-center justify-center gap-2 border border-slate-700">
+                                <i data-lucide="download" class="w-4 h-4"></i> Save Progress File
+                            </button>
+                        </div>
+
+                        <div class="bg-slate-950 border border-slate-800 p-5 rounded-xl space-y-3">
+                            <div class="flex items-center gap-2 text-teal-400 font-semibold text-sm">
+                                <i data-lucide="upload" class="w-5 h-5"></i>
+                                <span>Load Saved Progress</span>
+                            </div>
+                            <p class="text-xs text-slate-400">Restore your reflections across browsers or devices using a previously saved backup file.</p>
+                            <input type="file" id="import-file" onchange="importAppData(event)" class="hidden">
+                            <button onclick="document.getElementById('import-file').click()" class="w-full bg-slate-800 hover:bg-slate-700 text-white font-medium text-xs py-2.5 rounded-lg transition flex items-center justify-center gap-2 border border-slate-700">
+                                <i data-lucide="upload" class="w-4 h-4"></i> Load Saved Progress File
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="p-4 bg-teal-500/10 border border-teal-500/20 rounded-xl text-xs text-teal-300 flex items-start gap-3">
+                        <i data-lucide="lock" class="w-5 h-5 flex-shrink-0 mt-0.5"></i>
+                        <div>
+                            <strong class="font-semibold block mb-0.5 text-teal-200">100% Private & Local Storage</strong>
+                            All entries stay stored exclusively on your browser local storage. Zero cloud servers, zero tracking cookies, zero external database calls.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Footer with 2026 Lock -->
+    <footer class="border-t border-slate-800/80 py-6 text-center text-xs text-slate-500">
+        <p>&copy; 2026 Recovery Toolkit. All rights reserved. Self-contained & private.</p>
+    </footer>
+
+    <!-- PDF generator (no external library) -->
+    <script>
+/* ==========================================================================
+   Recovery Toolkit - PDF generator
+   - No libraries, no network: works offline and from file:// or GitHub Pages.
+   - Produces two A4 PDFs:  'guide'   -> User Guide & Recovery Manual
+                            'overview' -> Executive Overview & License
+   - Usage in 1.html:  RecoveryPDF.download('guide');  RecoveryPDF.download('overview');
+   ========================================================================== */
+(function (root) {
+  'use strict';
+
+  /* ---------- 1. BUILD METADATA (edit here only) ---------- */
+  var META = {
+    appName: 'Recovery Toolkit',
+    version: '1.0.0',
+    author: 'Thomas Greene',
+    licenseId: 'THOMAS_GREENE_LICENSE',
+    host: ''   /* confirm the real host before filling in; leave blank to omit */
+  };
+
+  /* ---------- 2. Helvetica metrics (ASCII 32..126) for word wrapping ---------- */
+  var W_REG = [278,278,355,556,556,889,667,191,333,333,389,584,278,333,278,278,
+    556,556,556,556,556,556,556,556,556,556,278,278,584,584,584,556,
+    1015,667,667,722,722,667,611,778,722,278,500,667,556,833,722,778,
+    667,778,722,667,611,722,667,944,667,667,611,278,278,278,469,556,
+    333,556,556,500,556,556,278,556,556,222,222,500,222,833,556,556,
+    556,556,333,500,278,556,500,722,500,500,500,334,260,334,584];
+  var W_BOLD = [278,333,474,556,556,889,722,238,333,333,389,584,278,333,278,278,
+    556,556,556,556,556,556,556,556,556,556,333,333,584,584,584,611,
+    975,722,722,722,722,667,611,778,722,278,556,722,611,833,722,778,
+    667,778,722,667,611,722,667,944,667,667,611,333,278,333,584,556,
+    333,556,611,556,611,556,333,611,611,278,278,556,278,889,611,611,
+    611,611,389,556,333,611,556,778,556,556,500,389,280,389,584];
+
+  var PW = 595.28, PH = 841.89, ML = 56, MR = 56, MB = 70;
+  var CW = PW - ML - MR;
+  var NAVY = [0.02, 0.03, 0.08], TEAL = [0.18, 0.83, 0.75], TEAL_D = [0.06, 0.46, 0.43];
+  var INK = [0.10, 0.10, 0.13], MUTED = [0.38, 0.40, 0.45], TINT = [0.90, 0.97, 0.96];
+
+  function clean(s) {
+    return String(s)
+      .replace(/[\u2013\u2014]/g, '-').replace(/[\u2018\u2019]/g, "'")
+      .replace(/[\u201C\u201D]/g, '"').replace(/\u2022/g, '-')
+      .replace(/[^\x20-\x7E]/g, '?');
+  }
+  function esc(s) { return clean(s).replace(/\\/g, '\\\\').replace(/\(/g, '\\(').replace(/\)/g, '\\)'); }
+  function width(s, bold, size) {
+    var t = bold ? W_BOLD : W_REG, w = 0, c = clean(s);
+    for (var i = 0; i < c.length; i++) w += t[c.charCodeAt(i) - 32];
+    return w * size / 1000;
+  }
+  function wrap(text, bold, size, maxW) {
+    var words = clean(text).split(/\s+/), lines = [], line = '';
+    for (var i = 0; i < words.length; i++) {
+      var test = line ? line + ' ' + words[i] : words[i];
+      if (width(test, bold, size) <= maxW || !line) line = test;
+      else { lines.push(line); line = words[i]; }
+    }
+    if (line) lines.push(line);
+    return lines;
+  }
+  function col(c) { return c[0] + ' ' + c[1] + ' ' + c[2]; }
+  function n2(n) { return (Math.round(n * 100) / 100).toString(); }
+
+  /* ---------- 3. Tiny layout engine ---------- */
+  function Doc(title, shortName) {
+    this.title = title; this.shortName = shortName; this.pages = [];
+    this.newPage();
+  }
+  Doc.prototype.newPage = function () {
+    this.cur = []; this.pages.push(this.cur); this.y = PH - 60;
+  };
+  Doc.prototype.ensure = function (h) { if (this.y - h < MB) this.newPage(); };
+  Doc.prototype.text = function (x, y, s, bold, size, color) {
+    this.cur.push('BT /' + (bold ? 'F2' : 'F1') + ' ' + size + ' Tf ' + col(color) +
+      ' rg ' + n2(x) + ' ' + n2(y) + ' Td (' + esc(s) + ') Tj ET');
+  };
+  Doc.prototype.rect = function (x, y, w, h, color) {
+    this.cur.push(col(color) + ' rg ' + n2(x) + ' ' + n2(y) + ' ' + n2(w) + ' ' + n2(h) + ' re f');
+  };
+  Doc.prototype.band = function (title, subtitle) {
+    var h = 120;
+    this.rect(0, PH - h, PW, h, NAVY);
+    this.rect(0, PH - h, PW, 4, TEAL);
+    this.text(ML, PH - 56, title, true, 22, TEAL);
+    this.text(ML, PH - 80, subtitle, false, 11, [0.78, 0.82, 0.88]);
+    this.text(ML, PH - 100, META.appName + '  |  Version ' + META.version, false, 9.5, [0.55, 0.62, 0.72]);
+    this.y = PH - h - 30;
+  };
+  Doc.prototype.h = function (s) {
+    this.ensure(60);
+    this.y -= 12;
+    this.text(ML, this.y, s, true, 14, TEAL_D);
+    this.y -= 7;
+    this.rect(ML, this.y, CW, 0.8, TEAL);
+    this.y -= 16;
+  };
+  Doc.prototype.sub = function (s) {
+    this.ensure(40);
+    this.y -= 4;
+    this.text(ML, this.y, s, true, 11.5, INK);
+    this.y -= 16;
+  };
+  Doc.prototype.p = function (s, opt) {
+    opt = opt || {};
+    var size = opt.size || 10.5, lead = size * 1.45, lines = wrap(s, !!opt.bold, size, CW);
+    for (var i = 0; i < lines.length; i++) {
+      this.ensure(lead);
+      this.text(ML, this.y, lines[i], !!opt.bold, size, opt.color || INK);
+      this.y -= lead;
+    }
+    this.y -= 5;
+  };
+  Doc.prototype.list = function (items, numbered) {
+    var size = 10.5, lead = size * 1.45, indent = 20;
+    for (var k = 0; k < items.length; k++) {
+      var lines = wrap(items[k], false, size, CW - indent);
+      this.ensure(lead * Math.min(lines.length, 2));
+      if (numbered) this.text(ML + 2, this.y, (k + 1) + '.', true, size, TEAL_D);
+      else this.rect(ML + 6, this.y + 2.5, 3.2, 3.2, TEAL_D);
+      for (var i = 0; i < lines.length; i++) {
+        this.ensure(lead);
+        this.text(ML + indent, this.y, lines[i], false, size, INK);
+        this.y -= lead;
+      }
+      this.y -= 3;
+    }
+    this.y -= 4;
+  };
+  Doc.prototype.callout = function (title, body) {
+    var size = 10, lead = size * 1.45, pad = 12, lines = wrap(body, false, size, CW - 2 * pad - 4);
+    var h = pad * 2 + 14 + lines.length * lead;
+    this.ensure(h + 6);
+    var top = this.y;
+    this.rect(ML, top - h, CW, h, TINT);
+    this.rect(ML, top - h, 3.5, h, TEAL);
+    this.text(ML + pad + 4, top - pad - 9, title, true, 10.5, TEAL_D);
+    var yy = top - pad - 9 - 16;
+    for (var i = 0; i < lines.length; i++) {
+      this.text(ML + pad + 4, yy, lines[i], false, size, INK);
+      yy -= lead;
+    }
+    this.y = top - h - 14;
+  };
+  Doc.prototype.table = function (rows) {
+    var size = 10.5, lead = size * 1.45, labelW = 185, pad = 8;
+    for (var r = 0; r < rows.length; r++) {
+      var ll = wrap(rows[r][0], true, size, labelW - 2 * pad + 4);
+      var vl = wrap(rows[r][1], false, size, CW - labelW - pad);
+      var h = Math.max(ll.length, vl.length) * lead + 2 * pad - 4;
+      this.ensure(h);
+      var top = this.y, i;
+      if (r % 2 === 0) this.rect(ML, top - h, CW, h, [0.95, 0.96, 0.97]);
+      for (i = 0; i < ll.length; i++)
+        this.text(ML + pad, top - pad - 6 - i * lead, ll[i], true, size, INK);
+      for (i = 0; i < vl.length; i++)
+        this.text(ML + labelW, top - pad - 6 - i * lead, vl[i], false, size, INK);
+      this.y = top - h;
+    }
+    this.y -= 14;
+  };
+
+  /* ---------- 4. PDF assembly ---------- */
+  function pdfDate(d) {
+    function z(n) { return (n < 10 ? '0' : '') + n; }
+    return 'D:' + d.getFullYear() + z(d.getMonth() + 1) + z(d.getDate()) +
+      z(d.getHours()) + z(d.getMinutes()) + z(d.getSeconds());
+  }
+  function finish(doc) {
+    var now = new Date(), total = doc.pages.length;
+    for (var i = 0; i < total; i++) {
+      var pg = doc.pages[i];
+      pg.push(col([0.80, 0.82, 0.85]) + ' rg ' + ML + ' 48 ' + n2(CW) + ' 0.6 re f');
+      pg.push('BT /F1 8.5 Tf ' + col(MUTED) + ' rg ' + ML + ' 34 Td (' +
+        esc(META.appName + ' v' + META.version + '  |  ' + doc.shortName) + ') Tj ET');
+      var label = 'Page ' + (i + 1) + ' of ' + total;
+      pg.push('BT /F1 8.5 Tf ' + col(MUTED) + ' rg ' + n2(PW - MR - width(label, false, 8.5)) +
+        ' 34 Td (' + esc(label) + ') Tj ET');
+    }
+    var objs = [], n = doc.pages.length, kids = [];
+    objs[1] = '<< /Type /Catalog /Pages 2 0 R >>';
+    for (var p = 0; p < n; p++) kids.push((6 + 2 * p) + ' 0 R');
+    objs[2] = '<< /Type /Pages /Kids [' + kids.join(' ') + '] /Count ' + n + ' >>';
+    objs[3] = '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>';
+    objs[4] = '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>';
+    for (var q = 0; q < n; q++) {
+      var stream = doc.pages[q].join('\n');
+      objs[5 + 2 * q] = '<< /Length ' + stream.length + ' >>\nstream\n' + stream + '\nendstream';
+      objs[6 + 2 * q] = '<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ' + PW + ' ' + PH + '] ' +
+        '/Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents ' + (5 + 2 * q) + ' 0 R >>';
+    }
+    var infoId = 5 + 2 * n;
+    objs[infoId] = '<< /Title (' + esc(doc.title) + ') /Author (' + esc(META.author) +
+      ') /Creator (' + esc(META.appName + ' ' + META.version) + ') /CreationDate (' + pdfDate(now) + ') >>';
+    var out = '%PDF-1.4\n%' + String.fromCharCode(226, 227, 207, 211) + '\n', offs = [];
+    for (var o = 1; o <= infoId; o++) {
+      offs[o] = out.length;
+      out += o + ' 0 obj\n' + objs[o] + '\nendobj\n';
+    }
+    var xref = out.length;
+    out += 'xref\n0 ' + (infoId + 1) + '\n0000000000 65535 f \n';
+    for (var x = 1; x <= infoId; x++) out += ('0000000000' + offs[x]).slice(-10) + ' 00000 n \n';
+    out += 'trailer\n<< /Size ' + (infoId + 1) + ' /Root 1 0 R /Info ' + infoId + ' 0 R >>\nstartxref\n' +
+      xref + '\n%%EOF';
+    var bytes = new Uint8Array(out.length);
+    for (var b = 0; b < out.length; b++) bytes[b] = out.charCodeAt(b) & 255;
+    return bytes;
+  }
+
+  /* ---------- 5. DOCUMENT 1: User Guide & Manual ---------- */
+  /* Flip these to true once the feature exists in the build you ship. */
+  var FLAGS = { hasPinLock: false, hasPanicButton: false, hasAudio: true };
+
+  function buildGuide() {
+    var d = new Doc('Recovery Toolkit - User Guide & Manual', 'User Guide & Manual');
+    var n = 0;
+    function H(t) { d.h((++n) + '. ' + t); }
+    d.band('User Guide & Manual', 'Practical CBT and mindfulness tools for managing cravings');
+
+    H('Quick Start and Privacy');
+    d.list([
+      'No sign-up: the Toolkit runs in your browser and needs no account.',
+      'Your entries (check-ins, thought entries, plans) are stored in this browser on this device. They are not uploaded to a server.',
+      'Storage belongs to the browser. A different browser or device starts empty, so use Save Progress File (see "Saving and Restoring Your Progress") to protect or move your entries.'
+    ]);
+
+    if (FLAGS.hasPinLock) {
+      H('Unlocking the Toolkit');
+      d.p('The Toolkit opens on a lock screen headed "Protected Access - Enter Passcode".');
+      d.list([
+        'Tap the box that says "Enter 4-digit PIN" and type your PIN.',
+        'Press "Unlock Toolkit".'
+      ], true);
+      d.callout('Keep your PIN safe',
+        'If you forget your PIN, the only way back in is to reset the app, which erases entries you have not saved to a progress file.');
+    }
+
+    H('The Surfer: Riding Out an Urge');
+    d.p('Urges rise to a peak and pass like ocean waves. Use the Surfer tab to ground yourself while the wave subsides.');
+    d.list([
+      'Open the Surfer tab and press "Start 90s Wave". The countdown starts at 01:30.',
+      'Breathe in slowly and out gently as the circle grows and shrinks.',
+      'Press "Pause Wave" to pause and "Resume Wave" to continue.',
+      'When the timer ends you will see a "Wave completed" message and the app counts the completed wave.'
+    ], true);
+    if (FLAGS.hasAudio) d.p('Under the timer, choose a Sound (ocean waves, ocean with soft pad, gentle rain, soft wind, calm pad, or silent) and a Voice (calm spoken guide, your own recordings, or off). Turn your device volume up before you start. Your choices are remembered on this device.');
+
+    if (FLAGS.hasPanicButton) {
+      H('Emergency Panic Mode');
+      d.p('If an urge feels overwhelming, press the Panic button for rapid grounding prompts and instant distraction.');
+    }
+
+    H('Thought Unpacker (ABCDE Tab)');
+    d.p('Use this when a trigger sets off automatic thoughts. Fill in each box, then press "Save Thought Entry". Saved reflections are listed underneath.');
+    d.table([
+      ['A - Trigger / Activating Event', 'What happened, for example a stressful work meeting or feeling lonely or bored.'],
+      ['B - Beliefs / Automatic Thoughts', 'What your mind told you, for example "I need this right now to feel better".'],
+      ['C - Consequences and Feelings', 'How it felt and what you did, for example anxious, tight chest, urge 8/10.'],
+      ['D - Reality Check / Gentle Challenge', 'Question the thought: "Is this thought 100% true? What happened last time I gave in?"'],
+      ['E - New Balanced Perspective', 'A calmer view: "This feeling is temporary. I am in control and choosing my health."']
+    ]);
+    d.callout('Worked example',
+      'Trigger: finished an overwhelming project late at night. Belief: "I deserve a drink or vape to relax, or I won\'t sleep." Consequence: tight chest, intense urge, anxiety 8/10. Reality check: giving in will ruin my sleep and raise my anxiety tomorrow, and I have relaxed without it before. New focus: chamomile tea, a warm shower, and let the urge wave pass.');
+
+    H('Cost-Benefit Analysis (CBA Tab)');
+    d.p('Weigh short-term relief against long-term peace of mind. The tab has four boxes. Your text is saved in the browser when you click out of a box.');
+    d.table([
+      ['Pros of Giving In (short-term)', 'Short-term relief, instant escape, temporary comfort.'],
+      ['Cons of Giving In (long-term)', 'Guilt, lost progress, health impacts, broken commitments.'],
+      ['Pros of Stepping Back (long-term)', 'Self-respect, improved health, staying in control, peace of mind.'],
+      ['Cons of Stepping Back (short-term)', 'Temporary physical discomfort, riding out the 10-minute wave.']
+    ]);
+
+    H('Values Check and Action Planner (Values Tab)');
+    d.list([
+      'Core Values: type what matters most to you, for example Health, Family, Self-Respect, Freedom, Peace.',
+      'If / Then Coping Plan: pair a high-risk trigger with an immediate coping action.'
+    ]);
+    d.callout('Example plan',
+      'IF I feel overwhelmed after work, THEN I will pause and practice Urge Surfing for 90 seconds.');
+
+    H('Daily Check-In (Check-In Tab)');
+    d.list([
+      'Rate your Mood from 1 (low) to 10 (high).',
+      'Rate your Urge Intensity from 1 (calm) to 10 (severe).',
+      'Add a brief reflection if you wish, then press "Save Check-In Entry".',
+      'Past check-ins appear under "Recent Logs" so you can spot patterns over time.'
+    ], true);
+
+    H('Saving and Restoring Your Progress (Guide Tab)');
+    d.list([
+      'Save Progress File: downloads a private backup file (recovery_toolkit_backup_2026.json) of your entries to your computer or phone.',
+      'Load Saved Progress File: restores a backup file you saved earlier. It replaces the entries currently in the app, so use it on a new device or after clearing your browser.',
+      'The Guide tab also holds the "Download User Guide" and "Download Overview" buttons for these PDFs.'
+    ]);
+    d.callout('Back up regularly',
+      'Clearing your browser data removes your entries. A saved progress file is the only way to get them back.');
+
+    H('If You Need Support Now');
+    d.p('This Toolkit supports your recovery but is not an emergency service. If you are in immediate danger, call 112 or 999. In Ireland, Samaritans is free on 116 123, any time. Your support group or a trusted person can help too.');
+
+    d.y -= 6;
+    d.p('Recovery Toolkit v' + META.version + '  |  Author: ' + META.author, { size: 9, color: MUTED });
+    return finish(d);
+  }
+
+  /* ---------- 6. DOCUMENT 2: Executive Overview & License ---------- */
+  function buildOverview() {
+    var d = new Doc('Recovery Toolkit - Executive Overview & License', 'Executive Overview & License');
+    var n = 0;
+    function H(t) { d.h((++n) + '. ' + t); }
+    d.band('Executive Overview & License', 'Purpose, privacy model, recovery steps and build record');
+
+    H('Project Purpose and Scope');
+    d.p('The Recovery Toolkit is a client-side web application that delivers immediate, structured CBT and mindfulness tools during moments of high stress or craving. It runs in the browser and needs no account.');
+
+    H('Tool Overview');
+    d.table([
+      ['Surfer', '90-second guided breathing and mindfulness wave for riding out an urge.'],
+      ['ABCDE (Thought Unpacker)', 'Cognitive reframing of automatic thoughts and triggers.'],
+      ['CBA', 'Decisional balance: short-term relief against long-term outcomes.'],
+      ['Values', 'Core values plus If / Then implementation intentions.'],
+      ['Check-In', 'Daily tracking of mood and urge intensity (1 to 10).'],
+      ['Guide', 'PDF downloads plus Save Progress File and Load Saved Progress File.']
+    ]);
+
+    H('Data and Privacy');
+    d.list([
+      'Entries are stored in the browser on the user\'s own device. The app does not send entries to a server.',
+      'No account, email address or sign-up is needed.',
+      'Users can save a backup file or clear their browser data at any time.',
+      'The page loads its styling, icon and QR-code libraries from public content-delivery networks, so it needs an internet connection the first time it loads. This does not involve sending user entries.'
+    ]);
+
+    H('Emergency Access and Recovery');
+    d.p('No master code or override is published in this document. Entries cannot be recovered by the author or anyone else, because they are held only in the user\'s browser.');
+    d.list([
+      'With a backup: open the Toolkit, go to the Guide tab, press "Load Saved Progress File" and choose the saved .json file.',
+      'Without a backup: entries cannot be recovered. Start fresh, then press "Save Progress File" regularly.'
+    ]);
+    if (FLAGS.hasPinLock) {
+      d.callout('Lock screen',
+        'If the PIN is forgotten, reset the app by clearing its stored data in your browser settings (Site data, or Cookies and site data, for the address the app runs from). This erases entries that have not been saved to a progress file, so save a progress file while the Toolkit is unlocked.');
+    }
+
+    H('Official Build Record');
+    var t = new Date();
+    var iso = t.getFullYear() + '-' + ('0' + (t.getMonth() + 1)).slice(-2) + '-' + ('0' + t.getDate()).slice(-2);
+    var rows = [
+      ['App name', META.appName + ' (2026 Edition)'],
+      ['Version', META.version],
+      ['Author / licensee', META.author],
+      ['License ID', META.licenseId]
+    ];
+    if (META.host) rows.push(['Allowed host', META.host]);
+    rows.push(['Document generated', iso]);
+    d.table(rows);
+    d.p('This build is issued under the license ID above.');
+
+    H('Emergency Contacts');
+    d.list([
+      'Immediate danger: 112 or 999.',
+      'Samaritans (Ireland): 116 123, free, any time.'
+    ]);
+
+    d.y -= 6;
+    d.p(META.appName + ' v' + META.version + '  |  ' + META.licenseId, { size: 9, color: MUTED });
+    return finish(d);
+  }
+
+  /* ---------- 7. Public API ---------- */
+  var FILES = { guide: 'Recovery_Toolkit_User_Guide_2026.pdf', overview: 'Recovery_Toolkit_Executive_Overview_2026.pdf' };
+
+  function build(which) {
+    if (which === 'guide') return buildGuide();
+    if (which === 'overview') return buildOverview();
+    throw new Error("RecoveryPDF: use 'guide' or 'overview'");
+  }
+  function download(which) {
+    var bytes = build(which), blob = new Blob([bytes], { type: 'application/pdf' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = FILES[which];
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 1500);
+  }
+
+  root.RecoveryPDF = { build: build, download: download, meta: META };
+  if (typeof module !== 'undefined' && module.exports) module.exports = root.RecoveryPDF;
+})(typeof window !== 'undefined' ? window : globalThis);
+
+    </script>
+
+    <!-- Application JavaScript Logic -->
+    <script>
+        // App State
+        let appData = {
+            surfed: 0,
+            abcde: [],
+            cba: { prosGivein: '', consGivein: '', prosStop: '', consStop: '' },
+            values: { userValues: '', ifThenIf: '', ifThenThen: '' },
+            checkins: []
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            loadStoredData();
+            loadSoundPrefs();
+            switchTab('surfer');
+        });
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('nav button').forEach(el => {
+                el.classList.remove('bg-teal-500/10', 'text-teal-400');
+                el.classList.add('text-slate-400');
+            });
+
+            const selectedContent = document.getElementById(`content-${tabId}`);
+            const selectedTab = document.getElementById(`tab-${tabId}`);
+
+            if (selectedContent) selectedContent.classList.remove('hidden');
+            if (selectedTab) {
+                selectedTab.classList.add('bg-teal-500/10', 'text-teal-400');
+                selectedTab.classList.remove('text-slate-400');
+            }
+        }
+
+        function loadStoredData() {
+            const saved = localStorage.getItem('recovery_toolkit_data');
+            if (saved) {
+                try {
+                    appData = JSON.parse(saved);
+                    renderAbcdeList();
+                    renderCbaData();
+                    renderValuesData();
+                    renderCheckins();
+                } catch(e) { console.error('Error loading stored data', e); }
+            }
+        }
+
+        function saveData() {
+            localStorage.setItem('recovery_toolkit_data', JSON.stringify(appData));
+        }
+
+        // Timer & Breathing Visualizer Logic
+        let timerInterval = null;
+        let timeLeft = 90;
+
+        // ===== Calm sound + spoken guide (no audio files needed) =====
+        const CalmAudio = (function () {
+            let ctx = null, master = null, live = [], timer = null;
+
+            function ensure() {
+                if (!ctx) {
+                    const AC = window.AudioContext || window.webkitAudioContext;
+                    if (!AC) return null;
+                    ctx = new AC();
+                    master = ctx.createGain();
+                    master.gain.value = 0;
+                    master.connect(ctx.destination);
+                }
+                if (ctx.state === 'suspended') ctx.resume();
+                return ctx;
+            }
+            function noise(kind) {
+                const len = ctx.sampleRate * 4, buf = ctx.createBuffer(1, len, ctx.sampleRate), d = buf.getChannelData(0);
+                let last = 0;
+                for (let i = 0; i < len; i++) {
+                    const w = Math.random() * 2 - 1;
+                    if (kind === 'brown') { last = (last + 0.02 * w) / 1.02; d[i] = last * 3.5; } else { d[i] = w; }
+                }
+                const s = ctx.createBufferSource();
+                s.buffer = buf; s.loop = true; s.start();
+                live.push(s);
+                return s;
+            }
+            function lfo(freq, depth, target) {
+                const o = ctx.createOscillator(), g = ctx.createGain();
+                o.frequency.value = freq; g.gain.value = depth;
+                o.connect(g); g.connect(target); o.start();
+                live.push(o);
+            }
+            function chain(src, nodes, level) {
+                let n = src;
+                nodes.forEach(x => { n.connect(x); n = x; });
+                const g = ctx.createGain(); g.gain.value = level;
+                n.connect(g); g.connect(master);
+                return g;
+            }
+            function filter(type, freq, q) {
+                const f = ctx.createBiquadFilter();
+                f.type = type; f.frequency.value = freq; if (q) f.Q.value = q;
+                return f;
+            }
+            const scenes = {
+                ocean() {
+                    const g = chain(noise('brown'), [filter('lowpass', 520)], 0.55);
+                    lfo(0.09, 0.35, g.gain);
+                    const foam = chain(noise('white'), [filter('bandpass', 1800, 0.4)], 0.04);
+                    lfo(0.09, 0.035, foam.gain);
+                },
+                rain() {
+                    chain(noise('white'), [filter('highpass', 900), filter('lowpass', 7000)], 0.22);
+                },
+                wind() {
+                    const f = filter('bandpass', 350, 0.9);
+                    const g = chain(noise('brown'), [f], 0.6);
+                    lfo(0.06, 160, f.frequency);
+                    lfo(0.05, 0.25, g.gain);
+                },
+                pad() {
+                    const lp = filter('lowpass', 900), g = ctx.createGain();
+                    g.gain.value = 0.5; lp.connect(g); g.connect(master);
+                    lfo(0.05, 0.2, g.gain);
+                    [110, 164.81, 220, 246.94].forEach((fr, i) => {
+                        const o = ctx.createOscillator(), og = ctx.createGain();
+                        o.type = i % 2 ? 'triangle' : 'sine';
+                        o.frequency.value = fr; o.detune.value = (i - 1.5) * 4;
+                        og.gain.value = 0.11;
+                        o.connect(og); og.connect(lp); o.start();
+                        live.push(o);
+                    });
+                },
+                oceanpad() { scenes.ocean(); scenes.pad(); }
+            };
+            function killLive() {
+                live.forEach(n => { try { n.stop(); } catch (e) {} });
+                live = [];
+            }
+            return {
+                start(name) {
+                    if (!name || name === 'off' || !scenes[name] || !ensure()) return;
+                    clearTimeout(timer);
+                    killLive();
+                    scenes[name]();
+                    const t = ctx.currentTime;
+                    master.gain.cancelScheduledValues(t);
+                    master.gain.setValueAtTime(master.gain.value, t);
+                    master.gain.linearRampToValueAtTime(0.5, t + 3);
+                },
+                stop() {
+                    if (!ctx) return;
+                    const t = ctx.currentTime;
+                    master.gain.cancelScheduledValues(t);
+                    master.gain.setValueAtTime(master.gain.value, t);
+                    master.gain.linearRampToValueAtTime(0, t + 1.5);
+                    clearTimeout(timer);
+                    timer = setTimeout(killLive, 1800);
+                }
+            };
+        })();
+
+        const VOICE_SCRIPTS = [
+            [[0, "Welcome. You are safe, and you are doing something good for yourself. Let your shoulders drop."],
+             [10, "Breathe in slowly, through your nose."], [16, "And let it go, gently, through your mouth."],
+             [26, "This urge is a wave. It rises, it peaks, and it will pass."],
+             [36, "You don't have to fight it. Just watch it, and keep breathing."],
+             [46, "In, and out. Feel your feet on the ground."],
+             [56, "Notice that the wave is already starting to change."],
+             [66, "You are stronger than this moment. Keep breathing slowly."],
+             [76, "Almost there. Let your body soften."], [85, "Well done. You rode the wave."]],
+            [[0, "Let's take ninety seconds together. Unclench your jaw, and soften your hands."],
+             [10, "Breathe in for four, and out for six."],
+             [22, "Look around, and name three things you can see."],
+             [34, "Now notice two sounds. Just listen. There is nothing to change."],
+             [46, "Feel the weight of your body, supported right where you are."],
+             [58, "Every breath is a small win. Keep going."],
+             [68, "The urge is losing its grip. Stay with your breath."],
+             [78, "You are choosing your health, one breath at a time."], [86, "Lovely. That took courage."]],
+            [[0, "Take a moment just for you. There is nothing to fix right now. Only breathe."],
+             [9, "Breathe in calm."], [15, "Breathe out tension."],
+             [26, "Be kind to yourself. Cravings are normal, and they pass."],
+             [38, "Imagine surfing the wave. Rising, balancing, and gliding back down."],
+             [50, "In, and out. Slow and steady."],
+             [62, "Every time you ride a wave, you grow stronger."],
+             [74, "Feel the calm spreading, from your head down to your toes."],
+             [84, "You did it. Be proud of this moment."]]
+        ];
+        let scriptIndex = -1, chosenVoice = null;
+
+        function pickVoice() {
+            if (chosenVoice || !('speechSynthesis' in window)) return chosenVoice;
+            const en = speechSynthesis.getVoices().filter(v => /^en/i.test(v.lang));
+            if (!en.length) return null;
+            const score = v => (/natural|online/i.test(v.name) ? 4 : 0) + (/en[-_]IE/i.test(v.lang) ? 3 : 0) + (/en[-_]GB/i.test(v.lang) ? 2 : 0) + (/female|sonia|libby|emily|moira|serena|samantha|hazel/i.test(v.name) ? 1 : 0);
+            chosenVoice = en.sort((a, b) => score(b) - score(a))[0];
+            return chosenVoice;
+        }
+        if ('speechSynthesis' in window) speechSynthesis.onvoiceschanged = () => { chosenVoice = null; pickVoice(); };
+
+        function speak(text) {
+            if (!('speechSynthesis' in window)) return;
+            const u = new SpeechSynthesisUtterance(text);
+            u.rate = 0.82; u.pitch = 0.95; u.volume = 0.9;
+            const v = pickVoice(); if (v) u.voice = v;
+            speechSynthesis.speak(u);
+        }
+
+        function soundMode() { return document.getElementById('sound-scene') ? document.getElementById('sound-scene').value : 'off'; }
+        function voiceMode() { return document.getElementById('voice-mode') ? document.getElementById('voice-mode').value : 'off'; }
+
+        function waveStart(fresh) {
+            CalmAudio.start(soundMode());
+            if (fresh) {
+                if (voiceMode() === 'device') {
+                    let i; do { i = Math.floor(Math.random() * VOICE_SCRIPTS.length); } while (i === scriptIndex && VOICE_SCRIPTS.length > 1);
+                    scriptIndex = i;
+                    waveTick(0);
+                } else if (voiceMode() === 'mp3') { playCue('rising.mp3'); }
+            } else if (voiceMode() === 'mp3') { resumeCue(); }
+        }
+        function wavePause() {
+            CalmAudio.stop();
+            if ('speechSynthesis' in window) speechSynthesis.cancel();
+            pauseCue();
+        }
+        function waveTick(elapsed) {
+            if (voiceMode() === 'device' && scriptIndex >= 0) {
+                VOICE_SCRIPTS[scriptIndex].forEach(c => { if (c[0] === elapsed) speak(c[1]); });
+            } else if (voiceMode() === 'mp3') { cueFor(elapsed); }
+        }
+        function waveEnd() { CalmAudio.stop(); }
+
+        function saveSoundPrefs() {
+            try { localStorage.setItem('recovery_toolkit_sound', JSON.stringify({ s: soundMode(), v: voiceMode() })); } catch (e) {}
+        }
+        function loadSoundPrefs() {
+            try {
+                const p = JSON.parse(localStorage.getItem('recovery_toolkit_sound') || 'null');
+                if (p) { document.getElementById('sound-scene').value = p.s; document.getElementById('voice-mode').value = p.v; }
+            } catch (e) {}
+        }
+
+        // Optional: your own mp3 recordings (files must sit in the same folder as this page)
+        let currentCue = null;
+        const CUES = { 30: 'peak.mp3', 60: 'subsiding.mp3', 90: 'done.mp3' };
+        function playCue(file) {
+            try { if (currentCue) currentCue.pause(); currentCue = new Audio(file); currentCue.play().catch(() => {}); } catch (e) {}
+        }
+        function pauseCue() { if (currentCue) currentCue.pause(); }
+        function resumeCue() { if (currentCue && !currentCue.ended) currentCue.play().catch(() => {}); }
+        function cueFor(elapsed) { if (CUES[elapsed]) playCue(CUES[elapsed]); }
+
+        function toggleWaveTimer() {
+            const btn = document.getElementById('start-wave-btn');
+            const display = document.getElementById('timer-display');
+            const status = document.getElementById('surfer-status');
+            const orb = document.getElementById('breathing-orb');
+
+            if (timerInterval) {
+                // Pause Wave
+                clearInterval(timerInterval);
+                timerInterval = null;
+                btn.innerHTML = `<i data-lucide="play" class="w-5 h-5"></i> Resume Wave`;
+                status.innerText = "Paused";
+                orb.classList.remove('breathing-active');
+                
+                wavePause();
+                
+                lucide.createIcons();
+            } else {
+                // Active Wave & Breathing Animation
+                btn.innerHTML = `<i data-lucide="pause" class="w-5 h-5"></i> Pause Wave`;
+                status.innerText = "Inhale slowly ... Exhale gently";
+                orb.classList.add('breathing-active');
+                
+                waveStart(timeLeft === 90);
+
+                lucide.createIcons();
+
+                timerInterval = setInterval(() => {
+                    timeLeft--;
+                    waveTick(90 - timeLeft);
+                    const mins = Math.floor(timeLeft / 60).toString().padStart(2, '0');
+                    const secs = (timeLeft % 60).toString().padStart(2, '0');
+                    display.innerText = `${mins}:${secs}`;
+
+                    if (timeLeft <= 0) {
+                        clearInterval(timerInterval);
+                        timerInterval = null;
+                        timeLeft = 90;
+                        display.innerText = "01:30";
+                        status.innerText = "Wave completed. Great job grounding yourself.";
+                        waveEnd();
+                        orb.classList.remove('breathing-active');
+                        btn.innerHTML = `<i data-lucide="play" class="w-5 h-5"></i> Start 90s Wave`;
+                        
+                        
+                        appData.surfed = (appData.surfed || 0) + 1;
+                        saveData();
+                        lucide.createIcons();
+                    }
+                }, 1000);
+            }
+        }
+
+        // ABCDE Entries
+        function saveAbcdeEntry(e) {
+            e.preventDefault();
+            const entry = {
+                date: new Date().toLocaleDateString(),
+                a: document.getElementById('abcde-a').value,
+                b: document.getElementById('abcde-b').value,
+                c: document.getElementById('abcde-c').value,
+                d: document.getElementById('abcde-d').value,
+                e: document.getElementById('abcde-e').value
+            };
+            appData.abcde.unshift(entry);
+            saveData();
+            renderAbcdeList();
+            document.getElementById('abcde-form').reset();
+        }
+
+        function renderAbcdeList() {
+            const container = document.getElementById('abcde-list');
+            if (!appData.abcde || appData.abcde.length === 0) {
+                container.innerHTML = `<p class="text-xs text-slate-500 italic">No entries saved yet.</p>`;
+                return;
+            }
+            container.innerHTML = appData.abcde.map(item => `
+                <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800/80 space-y-1">
+                    <div class="flex justify-between text-xs text-slate-400 font-semibold">
+                        <span>Trigger: ${item.a}</span>
+                        <span>${item.date}</span>
+                    </div>
+                    <p class="text-xs text-teal-300">New Focus: ${item.e || 'N/A'}</p>
+                </div>
+            `).join('');
+        }
+
+        // CBA Matrix Data
+        function saveCbaData() {
+            appData.cba = {
+                prosGivein: document.getElementById('cba-pros-givein').value,
+                consGivein: document.getElementById('cba-cons-givein').value,
+                prosStop: document.getElementById('cba-pros-stop').value,
+                consStop: document.getElementById('cba-cons-stop').value
+            };
+            saveData();
+        }
+
+        function renderCbaData() {
+            if (appData.cba) {
+                document.getElementById('cba-pros-givein').value = appData.cba.prosGivein || '';
+                document.getElementById('cba-cons-givein').value = appData.cba.consGivein || '';
+                document.getElementById('cba-pros-stop').value = appData.cba.prosStop || '';
+                document.getElementById('cba-cons-stop').value = appData.cba.consStop || '';
+            }
+        }
+
+        // Values & Action Plan
+        function saveValuesData() {
+            appData.values = {
+                userValues: document.getElementById('user-values').value,
+                ifThenIf: document.getElementById('ifthen-if').value,
+                ifThenThen: document.getElementById('ifthen-then').value
+            };
+            saveData();
+        }
+
+        function renderValuesData() {
+            if (appData.values) {
+                document.getElementById('user-values').value = appData.values.userValues || '';
+                document.getElementById('ifthen-if').value = appData.values.ifThenIf || '';
+                document.getElementById('ifthen-then').value = appData.values.ifThenThen || '';
+            }
+        }
+
+        // Check-ins
+        function saveCheckin(e) {
+            e.preventDefault();
+            const entry = {
+                date: new Date().toLocaleDateString(),
+                mood: document.getElementById('checkin-mood').value,
+                urge: document.getElementById('checkin-urge').value,
+                note: document.getElementById('checkin-note').value
+            };
+            appData.checkins.unshift(entry);
+            saveData();
+            renderCheckins();
+            document.getElementById('checkin-note').value = '';
+        }
+
+        function renderCheckins() {
+            const container = document.getElementById('checkin-list');
+            if (!appData.checkins || appData.checkins.length === 0) {
+                container.innerHTML = `<p class="text-xs text-slate-500 italic">No check-ins logged yet.</p>`;
+                return;
+            }
+            container.innerHTML = appData.checkins.map(item => `
+                <div class="bg-slate-950 p-3 rounded-xl border border-slate-800/80 flex justify-between items-center">
+                    <div>
+                        <span class="text-slate-300 font-medium">${item.date}</span>
+                        <p class="text-slate-400 mt-0.5">${item.note || 'No notes'}</p>
+                    </div>
+                    <div class="text-right space-x-2">
+                        <span class="text-teal-400 font-medium">Mood: ${item.mood}/10</span>
+                        <span class="text-rose-400 font-medium">Urge: ${item.urge}/10</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Backup & Restore
+        function exportAppData() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appData));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", "recovery_toolkit_backup_2026.json");
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+        }
+
+        function importAppData(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    appData = JSON.parse(e.target.result);
+                    saveData();
+                    renderAbcdeList();
+                    renderCbaData();
+                    renderValuesData();
+                    renderCheckins();
+                    alert('Progress data restored successfully!');
+                } catch(err) {
+                    alert('Invalid backup file format.');
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        // Formatted PDF Exporters
+        function downloadUserGuidePDF() { RecoveryPDF.download('guide'); }
+        function downloadExecutiveSummaryPDF() { RecoveryPDF.download('overview'); }
+    </script>
+<!-- Local Privacy-First QR Code Box -->
+<div class="bg-slate-950 border border-slate-800 p-5 rounded-xl space-y-4 text-center max-w-sm mx-auto my-6">
+    <div class="flex items-center justify-center gap-2 text-teal-400 font-semibold text-sm">
+        <span>QR Code for Sharing</span>
+    </div>
+    <p class="text-xs text-slate-400">Generate a QR code for the app link. It is made in your browser:</p>
+    
+    <input type="text" id="local-qr-input" value="https://recoverytoolkit.github.io/recovery-toolkit-prototype/" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 text-xs text-white text-center focus:outline-none focus:border-teal-500">
+    
+    <button onclick="makeLocalQR()" class="w-full bg-teal-500 hover:bg-teal-400 text-slate-950 font-semibold py-2 rounded-lg text-xs transition">Generate Local QR Image</button>
+    
+    <div id="local-qr-box" class="flex justify-center p-3 bg-white rounded-xl mx-auto w-fit shadow-lg"></div>
+</div>
+
+<!-- Local Script for QR Generation -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+    function makeLocalQR() {
+        const container = document.getElementById('local-qr-box');
+        const urlText = document.getElementById('local-qr-input').value;
+        container.innerHTML = "";
+        new QRCode(container, {
+            text: urlText,
+            width: 140,
+            height: 140,
+            colorDark: "#0f172a",
+            colorLight: "#ffffff",
+            correctLevel: QRCode.CorrectLevel.M
+        });
+    }
+    window.onload = function() { makeLocalQR(); };
+</script>
+</body>
+</html>
