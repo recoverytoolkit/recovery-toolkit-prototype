@@ -245,10 +245,21 @@
                                 <option value="mp3">My recordings</option>
                                 <option value="off">Off</option>
                             </select>
+                        <div class="flex flex-wrap justify-center gap-3 text-xs text-slate-300">
+                        <label class="flex items-center gap-2">Sound
+                            <select id="sound-scene" onchange="saveSoundPrefs()" class="bg-slate-900 border border-slate-700 rounded-lg px-2 py-1.5 text-white">
+                                <option value="ocean">Ocean waves</option>
+                                <option value="oceanpad">Ocean + soft pad</option>
+                                <option value="rain">Gentle rain</option>
+                                <option value="wind">Soft wind</option>
+                                <option value="pad">Calm pad</option>
+                                <option value="off">Silent</option>
+                            </select>
                         </label>
-                        <label class="flex items-center gap-2">Speaker
-                            <select id="voice-pick" onchange="onVoicePick()" class="bg-slate-900 border border-slate-700 rounded-lg px-2 py-1.5 text-white max-w-[14rem]">
-                                <option value="">Best available</option>
+                        <label class="flex items-center gap-2">Voice
+                            <select id="voice-mode" onchange="saveSoundPrefs()" class="bg-slate-900 border border-slate-700 rounded-lg px-2 py-1.5 text-white">
+                                <option value="mp3">Calm Spoken Voice</option>
+                                <option value="off">Off</option>
                             </select>
                         </label>
                         <label class="flex items-center gap-2">Speed
@@ -258,7 +269,7 @@
                                 <option value="0.92">Normal</option>
                             </select>
                         </label>
-                        <button type="button" onclick="testVoice()" class="bg-slate-800 hover:bg-slate-700 text-white rounded-lg px-3 py-1.5">Test voice</button>
+                    </div>
                     </div>
                     <p id="voice-note" class="text-xs text-amber-400"></p>
                     <p class="text-xs text-slate-500">Turn your volume up, then tap the circle or the Start button. A different guide is chosen each time.</p>
