@@ -5,14 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Recovery Toolkit (2026 Edition)</title>
     <!-- Tailwind CSS CDN -->
+    <meta name="theme-color" content="#0b1238">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+    /* Navy, gold and sky blue palette (colours only; no logo). The old teal name now maps to sky blue, amber to gold, slate to navy. */
+    if (window.tailwind) {
+      tailwind.config = { theme: { extend: { colors: {
+        slate: {50:'#f5f7fc',100:'#e9edf8',200:'#d3dbf0',300:'#b0bce0',400:'#94a3d0',500:'#7686ba',600:'#4b5890',700:'#2f3a74',800:'#1a2358',900:'#0e1540',950:'#070b26'},
+        teal:  {50:'#eaf7fd',100:'#cdeefa',200:'#9bdcf5',300:'#7dd3f5',400:'#43b9ea',500:'#29abe2',600:'#1b8dbf',700:'#176f98',800:'#155a7a',900:'#144b65',950:'#0b2f40'},
+        amber: {50:'#fbf6e4',100:'#f5ecc3',200:'#efe09b',300:'#e9d27f',400:'#deb94a',500:'#c9a227',600:'#a8851c',700:'#856819',800:'#6b5418',900:'#574516',950:'#322609'},
+        emerald: {300:'#ecd98b',400:'#d9b94a',500:'#c9a227',600:'#a8851c'}
+      } } } };
+    }
+    </script>
     <!-- Lucide Icons CDN -->
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script>/* If the icon library cannot load (no internet), keep the app working without icons. */ window.lucide = window.lucide || { createIcons: function () {} };</script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
         body {
+            overflow-x: hidden;
             font-family: 'Inter', sans-serif;
-            background-color: #0f172a;
+            background-color: #0b1238;
             color: #f8fafc;
         }
 
@@ -20,21 +34,38 @@
         @keyframes breatheGlow {
             0%, 100% {
                 transform: scale(0.85);
-                box-shadow: 0 0 20px rgba(13, 148, 136, 0.2), inset 0 0 15px rgba(13, 148, 136, 0.2);
-                border-color: #0d9488;
-                background-color: rgba(13, 148, 136, 0.08);
+                box-shadow: 0 0 20px rgba(41, 171, 226, 0.25), inset 0 0 15px rgba(41, 171, 226, 0.2);
+                border-color: #29abe2;
+                background-color: rgba(41, 171, 226, 0.08);
             }
             50% {
                 transform: scale(1.18);
-                box-shadow: 0 0 45px rgba(56, 189, 248, 0.5), inset 0 0 25px rgba(56, 189, 248, 0.3);
-                border-color: #38bdf8;
-                background-color: rgba(56, 189, 248, 0.15);
+                box-shadow: 0 0 45px rgba(201, 162, 39, 0.45), inset 0 0 25px rgba(201, 162, 39, 0.25);
+                border-color: #e0b93f;
+                background-color: rgba(201, 162, 39, 0.14);
             }
         }
 
         .breathing-active {
             animation: breatheGlow 7s ease-in-out infinite;
         }
+
+
+        /* ---- Phone readability and touch targets (v2) ---- */
+        html { -webkit-text-size-adjust: 100%; }
+        @media (max-width: 640px) {
+            html { font-size: 17px; }
+            header nav { flex-wrap: nowrap; overflow-x: auto; justify-content: flex-start; width: 100%;
+                         -webkit-overflow-scrolling: touch; padding-bottom: 4px; scrollbar-width: none; }
+            header nav::-webkit-scrollbar { display: none; }
+            header nav button { white-space: nowrap; min-height: 44px; flex: 0 0 auto; }
+            main .text-xs { font-size: 0.8125rem; line-height: 1.25rem; }
+            button, select, input, textarea { min-height: 44px; }
+            #breathing-orb { width: 12.5rem; height: 12.5rem; }
+        }
+        #breathing-orb { cursor: pointer; -webkit-tap-highlight-color: transparent; }
+        #breathing-orb:focus-visible { outline: 3px solid #7dd3f5; outline-offset: 4px; }
+        #breathing-orb:active { filter: brightness(1.25); }
 
         /* Optimized CSS for High-Quality Single-Page PDF Export */
         .pdf-page {
@@ -47,7 +78,7 @@
             width: 100%;
         }
         .pdf-header {
-            border-bottom: 2px solid #0d9488;
+            border-bottom: 2px solid #1b8dbf;
             padding-bottom: 4px;
             margin-bottom: 8px;
         }
@@ -58,7 +89,7 @@
             margin-bottom: 6px;
         }
         .pdf-table th {
-            background-color: #0d9488;
+            background-color: #1b8dbf;
             color: #ffffff;
             text-align: left;
             padding: 4px 6px;
@@ -94,12 +125,23 @@
         }
         .example-box {
             background-color: #f1f5f9;
-            border-left: 3px solid #0d9488;
+            border-left: 3px solid #1b8dbf;
             padding: 5px 8px;
             margin: 4px 0;
             border-radius: 2px;
             font-size: 9px;
         }
+        .chip { display:inline-flex; align-items:center; gap:6px; padding:8px 12px; margin:0 6px 6px 0; border:1px solid #2f3a74; border-radius:9999px; font-size:13px; color:#d3dbf0; background:#0e1540; cursor:pointer; min-height:40px; }
+        .chip input { accent-color:#29abe2; width:16px; height:16px; }
+        .chip:has(input:checked) { border-color:#e0b93f; color:#f1dc8f; background:rgba(201,162,39,.16); }
+        .save-note { font-size:12px; color:#e9d27f; min-height:16px; }
+        .del-btn { font-size:11px; color:#fda4af; border:1px solid #475569; border-radius:8px; padding:6px 10px; min-height:32px; background:transparent; }
+        .steady-overlay { position:fixed; inset:0; z-index:100; background:#070b26; color:#e9edf8; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:24px 20px; text-align:center; overflow-y:auto; }
+        .steady-overlay.hidden { display:none; }
+        .steady-circle { width:11rem; height:11rem; border-radius:9999px; background:radial-gradient(circle at 35% 30%, #7dd3f5, #1b8dbf); box-shadow:0 0 60px rgba(201,162,39,.35); animation: steadyBreath 10s ease-in-out infinite; }
+        @keyframes steadyBreath { 0%{transform:scale(.62)} 40%{transform:scale(1)} 100%{transform:scale(.62)} }
+        @media (prefers-reduced-motion: reduce) { .steady-circle { animation:none; transform:scale(.85); } }
+        .steady-line { font-size:1.35rem; line-height:1.5; min-height:5.5rem; max-width:26rem; }
     </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between">
@@ -120,7 +162,7 @@
                     </div>
                 </div>
                 
-                <nav class="flex items-center space-x-1 sm:space-x-2 text-sm font-medium">
+                <nav class="flex flex-wrap items-center justify-center gap-1 text-sm font-medium">
                     <button onclick="switchTab('surfer')" id="tab-surfer" class="px-3 py-2 rounded-lg transition text-slate-400 hover:text-white flex items-center gap-1.5">
                         <i data-lucide="waves" class="w-4 h-4"></i>
                         <span>Surfer</span>
@@ -166,19 +208,24 @@
                     <div class="bg-slate-950/80 border border-slate-800/80 rounded-2xl p-8 flex flex-col items-center justify-center min-h-[320px] relative overflow-hidden">
                         
                         <!-- Visual Breathing Focus Circle -->
-                        <div id="breathing-orb" class="w-40 h-40 rounded-full border-2 border-teal-500/60 flex items-center justify-center transition-all duration-700 bg-gradient-to-br from-teal-500/10 to-sky-500/10 relative">
+                        <div id="breathing-orb" role="button" tabindex="0" aria-label="Start or pause the 90 second wave with the spoken guide" onclick="toggleWaveTimer()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleWaveTimer();}" class="w-40 h-40 rounded-full border-2 border-teal-500/60 flex items-center justify-center transition-all duration-700 bg-gradient-to-br from-teal-500/10 to-sky-500/10 relative">
                             <div class="w-28 h-28 rounded-full bg-teal-400/10 border border-teal-400/30 flex items-center justify-center">
                                 <i data-lucide="wind" id="orb-icon" class="w-10 h-10 text-teal-400 transition-transform duration-700"></i>
                             </div>
                         </div>
 
                         <p id="timer-display" class="mt-6 text-4xl font-mono font-bold text-white tracking-wider">01:30</p>
-                        <p id="surfer-status" class="text-xs font-semibold text-teal-400 uppercase tracking-widest mt-2">Ready when you are</p>
+                        <p id="surfer-status" class="text-xs font-semibold text-teal-400 uppercase tracking-widest mt-2">Tap the circle to start</p>
                     </div>
 
                     <div class="flex justify-center gap-4">
                         <button id="start-wave-btn" onclick="toggleWaveTimer()" class="bg-teal-500 hover:bg-teal-400 text-slate-950 font-semibold px-8 py-3 rounded-xl transition-all shadow-lg shadow-teal-500/20 flex items-center gap-2">
                             <i data-lucide="play" class="w-5 h-5"></i> Start 90s Wave
+                        </button>
+                    </div>
+                    <div class="flex justify-center">
+                        <button type="button" id="steady-open-btn" onclick="openSteady()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-semibold px-8 py-3 rounded-xl transition-all shadow-lg shadow-amber-500/20 flex items-center gap-2 min-h-[48px]">
+                            <i data-lucide="life-buoy" class="w-5 h-5"></i> Steady me now
                         </button>
                     </div>
                     <div class="flex flex-wrap justify-center gap-3 text-xs text-slate-300">
@@ -199,8 +246,22 @@
                                 <option value="off">Off</option>
                             </select>
                         </label>
+                        <label class="flex items-center gap-2">Speaker
+                            <select id="voice-pick" onchange="onVoicePick()" class="bg-slate-900 border border-slate-700 rounded-lg px-2 py-1.5 text-white max-w-[14rem]">
+                                <option value="">Best available</option>
+                            </select>
+                        </label>
+                        <label class="flex items-center gap-2">Speed
+                            <select id="voice-speed" onchange="saveSoundPrefs()" class="bg-slate-900 border border-slate-700 rounded-lg px-2 py-1.5 text-white">
+                                <option value="0.72">Slower</option>
+                                <option value="0.82" selected>Calm</option>
+                                <option value="0.92">Normal</option>
+                            </select>
+                        </label>
+                        <button type="button" onclick="testVoice()" class="bg-slate-800 hover:bg-slate-700 text-white rounded-lg px-3 py-1.5">Test voice</button>
                     </div>
-                    <p class="text-xs text-slate-500">Turn your volume up, then tap Start. A different guide is chosen each time.</p>
+                    <p id="voice-note" class="text-xs text-amber-400"></p>
+                    <p class="text-xs text-slate-500">Turn your volume up, then tap the circle or the Start button. A different guide is chosen each time.</p>
                 </div>
             </section>
 
@@ -274,23 +335,27 @@
                         <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl space-y-2">
                             <h4 class="text-xs font-bold text-teal-400 uppercase">Pros of Giving In (Short-Term)</h4>
                             <p class="text-xs text-slate-400">e.g., Short-term relief, instant escape, temporary comfort...</p>
-                            <textarea id="cba-pros-givein" onchange="saveCbaData()" rows="3" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-teal-500" placeholder="Type your thoughts here..."></textarea>
+                            <textarea id="cba-pros-givein" oninput="saveCbaData()" rows="3" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-teal-500" placeholder="Type your thoughts here..."></textarea>
                         </div>
                         <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl space-y-2">
                             <h4 class="text-xs font-bold text-rose-400 uppercase">Cons of Giving In (Long-Term)</h4>
                             <p class="text-xs text-slate-400">e.g., Guilt, lost progress, health impacts, broken commitments...</p>
-                            <textarea id="cba-cons-givein" onchange="saveCbaData()" rows="3" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-teal-500" placeholder="Type your thoughts here..."></textarea>
+                            <textarea id="cba-cons-givein" oninput="saveCbaData()" rows="3" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-teal-500" placeholder="Type your thoughts here..."></textarea>
                         </div>
                         <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl space-y-2">
                             <h4 class="text-xs font-bold text-teal-400 uppercase">Pros of Stepping Back (Long-Term)</h4>
                             <p class="text-xs text-slate-400">e.g., Self-respect, improved health, staying in control, peace of mind...</p>
-                            <textarea id="cba-pros-stop" onchange="saveCbaData()" rows="3" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-teal-500" placeholder="Type your thoughts here..."></textarea>
+                            <textarea id="cba-pros-stop" oninput="saveCbaData()" rows="3" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-teal-500" placeholder="Type your thoughts here..."></textarea>
                         </div>
                         <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl space-y-2">
                             <h4 class="text-xs font-bold text-rose-400 uppercase">Cons of Stepping Back (Short-Term)</h4>
                             <p class="text-xs text-slate-400">e.g., Temporary physical discomfort, riding out the 10-minute wave...</p>
-                            <textarea id="cba-cons-stop" onchange="saveCbaData()" rows="3" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-teal-500" placeholder="Type your thoughts here..."></textarea>
+                            <textarea id="cba-cons-stop" oninput="saveCbaData()" rows="3" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-teal-500" placeholder="Type your thoughts here..."></textarea>
                         </div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <button type="button" id="cba-save-btn" onclick="saveCbaData(true)" class="bg-teal-500 hover:bg-teal-400 text-slate-950 font-semibold px-6 py-2.5 rounded-lg text-sm transition">Save Matrix</button>
+                        <span id="cba-saved" class="save-note" role="status" aria-live="polite"></span>
                     </div>
                 </div>
             </section>
@@ -314,7 +379,7 @@
                         <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl space-y-3">
                             <h3 class="text-sm font-semibold text-white">Core Values</h3>
                             <p class="text-xs text-slate-400">What matters most to you? (e.g., Health, Family, Freedom, Peace)</p>
-                            <input type="text" id="user-values" onchange="saveValuesData()" placeholder="e.g., Health, Family, Self-Respect, Freedom, Peace" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-teal-500">
+                            <input type="text" id="user-values" oninput="saveValuesData()" placeholder="e.g., Health, Family, Self-Respect, Freedom, Peace" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-teal-500">
                         </div>
 
                         <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl space-y-3">
@@ -323,14 +388,18 @@
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                 <div>
                                     <label class="block text-xs font-semibold text-slate-400 uppercase mb-1">IF Trigger Occurs:</label>
-                                    <input type="text" id="ifthen-if" onchange="saveValuesData()" placeholder="IF (e.g., I feel overwhelmed after work)" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-teal-500">
+                                    <input type="text" id="ifthen-if" oninput="saveValuesData()" placeholder="IF (e.g., I feel overwhelmed after work)" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-teal-500">
                                 </div>
                                 <div>
                                     <label class="block text-xs font-semibold text-slate-400 uppercase mb-1">THEN I Will Execute:</label>
-                                    <input type="text" id="ifthen-then" onchange="saveValuesData()" placeholder="THEN (e.g., I will practice Urge Surfing for 90s)" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-teal-500">
+                                    <input type="text" id="ifthen-then" oninput="saveValuesData()" placeholder="THEN (e.g., I will practice Urge Surfing for 90s)" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-teal-500">
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <button type="button" id="values-save-btn" onclick="saveValuesData(true)" class="bg-teal-500 hover:bg-teal-400 text-slate-950 font-semibold px-6 py-2.5 rounded-lg text-sm transition">Save Values and Plan</button>
+                        <span id="values-saved" class="save-note" role="status" aria-live="polite"></span>
                     </div>
                 </div>
             </section>
@@ -361,6 +430,42 @@
                                 <input type="number" id="checkin-urge" min="1" max="10" value="2" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 text-sm text-white">
                             </div>
                         </div>
+                        <fieldset>
+                            <legend class="block text-xs font-medium text-slate-300 mb-2">What set it off? (tick any that fit)</legend>
+                            <div id="trigger-chips">
+                                <label class="chip"><input type="checkbox" name="trig" value="Tired"> Tired</label>
+                                <label class="chip"><input type="checkbox" name="trig" value="Stressed"> Stressed</label>
+                                <label class="chip"><input type="checkbox" name="trig" value="Lonely"> Lonely</label>
+                                <label class="chip"><input type="checkbox" name="trig" value="Bored"> Bored</label>
+                                <label class="chip"><input type="checkbox" name="trig" value="Angry or hurt"> Angry or hurt</label>
+                                <label class="chip"><input type="checkbox" name="trig" value="Money worry"> Money worry</label>
+                                <label class="chip"><input type="checkbox" name="trig" value="After work"> After work</label>
+                                <label class="chip"><input type="checkbox" name="trig" value="Late at night"> Late at night</label>
+                                <label class="chip"><input type="checkbox" name="trig" value="Certain people or places"> Certain people or places</label>
+                                <label class="chip"><input type="checkbox" name="trig" value="Hungry"> Hungry</label>
+                            </div>
+                            <input type="text" id="checkin-trigger-other" maxlength="60" placeholder="Something else? (a few words)" class="mt-1 w-full bg-slate-900 border border-slate-800 rounded-lg p-2.5 text-sm text-white">
+                        </fieldset>
+                        <fieldset>
+                            <legend class="block text-xs font-medium text-slate-300 mb-2">What did you do? (tick any that fit)</legend>
+                            <div id="coping-chips">
+                                <label class="chip"><input type="checkbox" name="cope" value="90-second wave"> 90-second wave</label>
+                                <label class="chip"><input type="checkbox" name="cope" value="Went for a walk"> Went for a walk</label>
+                                <label class="chip"><input type="checkbox" name="cope" value="Spoke to someone"> Spoke to someone</label>
+                                <label class="chip"><input type="checkbox" name="cope" value="Breathing"> Breathing</label>
+                                <label class="chip"><input type="checkbox" name="cope" value="Distracted myself"> Distracted myself</label>
+                                <label class="chip"><input type="checkbox" name="cope" value="Wrote it down"> Wrote it down</label>
+                            </div>
+                        </fieldset>
+                        <div>
+                            <label class="block text-xs font-medium text-slate-300 mb-1" for="checkin-outcome">How did it go?</label>
+                            <select id="checkin-outcome" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2.5 text-sm text-white">
+                                <option value="">Skip this</option>
+                                <option value="none">No urge today</option>
+                                <option value="rode">I rode it out</option>
+                                <option value="gave">I gave in this time</option>
+                            </select>
+                        </div>
                         <div>
                             <label class="block text-xs font-medium text-slate-300 mb-1">Brief Reflection / Notes</label>
                             <input type="text" id="checkin-note" placeholder="How are you feeling today?" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2.5 text-sm text-white">
@@ -372,6 +477,13 @@
                         <h3 class="text-sm font-semibold text-white mb-3">Recent Logs</h3>
                         <div id="checkin-list" class="space-y-2 text-xs"></div>
                     </div>
+
+                    <div class="border-t border-slate-800 pt-4 space-y-3">
+                        <h3 class="text-sm font-semibold text-white">Weekly Pattern Spotter</h3>
+                        <p class="text-xs text-slate-400">Looks back over your last 7 days of check-ins and counts what shows up. It runs on this device only and sends nothing anywhere. It describes patterns in what you logged. It is not a diagnosis.</p>
+                        <button type="button" onclick="runPatternSpotter()" class="bg-teal-500 hover:bg-teal-400 text-slate-950 font-semibold px-5 py-2 rounded-lg text-xs transition">Show my week</button>
+                        <div id="pattern-output" class="space-y-2 text-sm text-slate-200" aria-live="polite"></div>
+                    </div>
                 </div>
             </section>
 
@@ -380,7 +492,7 @@
                 <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 space-y-6 shadow-xl">
                     <div>
                         <h2 class="text-xl font-bold text-white">Guide Hub & Data Management</h2>
-                        <p class="text-slate-400 text-sm">Download formatted offline manuals or manage your local backup files.</p>
+                        <p class="text-slate-400 text-sm">Download printable guides (made on your device) or manage your backup file.</p>
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -400,7 +512,7 @@
                                 <i data-lucide="shield-check" class="w-5 h-5"></i>
                                 <span>Executive Overview (PDF)</span>
                             </div>
-                            <p class="text-xs text-slate-400">Download the single-page architecture overview detailing privacy, offline storage, and CBT methods.</p>
+                            <p class="text-xs text-slate-400">Download the single-page architecture overview covering privacy, where your entries are stored, and the CBT methods used.</p>
                             <button onclick="downloadExecutiveSummaryPDF()" class="w-full bg-slate-800 hover:bg-slate-700 text-white font-medium text-xs py-2.5 rounded-lg transition flex items-center justify-center gap-2 border border-slate-700">
                                 <i data-lucide="download" class="w-4 h-4"></i> Download Overview
                             </button>
@@ -433,8 +545,8 @@
                     <div class="p-4 bg-teal-500/10 border border-teal-500/20 rounded-xl text-xs text-teal-300 flex items-start gap-3">
                         <i data-lucide="lock" class="w-5 h-5 flex-shrink-0 mt-0.5"></i>
                         <div>
-                            <strong class="font-semibold block mb-0.5 text-teal-200">100% Private & Local Storage</strong>
-                            All entries stay stored exclusively on your browser local storage. Zero cloud servers, zero tracking cookies, zero external database calls.
+                            <strong class="font-semibold block mb-0.5 text-teal-200">Your entries stay on your device</strong>
+                            Your entries are saved only in this browser, on this device. The app does not send them to a server, and there is no account. To load its look and icons, the page needs the internet when it opens. Your entries are not part of that. Save a progress file now and then, because clearing your browser data erases entries.
                         </div>
                     </div>
                 </div>
@@ -445,14 +557,14 @@
 
     <!-- Footer with 2026 Lock -->
     <footer class="border-t border-slate-800/80 py-6 text-center text-xs text-slate-500">
-        <p>&copy; 2026 Recovery Toolkit. All rights reserved. Self-contained & private.</p>
+        <p>&copy; 2026 Recovery Toolkit. Your entries stay on your device. This is a self-help tool, not medical advice. In danger: 112 or 999. Samaritans: 116 123.</p>
     </footer>
 
     <!-- PDF generator (no external library) -->
     <script>
 /* ==========================================================================
    Recovery Toolkit - PDF generator
-   - No libraries, no network: works offline and from file:// or GitHub Pages.
+   - No libraries and no network calls of its own (the page around it loads styles and icons online).
    - Produces two A4 PDFs:  'guide'   -> User Guide & Recovery Manual
                             'overview' -> Executive Overview & License
    - Usage in 1.html:  RecoveryPDF.download('guide');  RecoveryPDF.download('overview');
@@ -463,7 +575,7 @@
   /* ---------- 1. BUILD METADATA (edit here only) ---------- */
   var META = {
     appName: 'Recovery Toolkit',
-    version: '1.0.0',
+    version: '1.1.0',
     author: 'Thomas Greene',
     licenseId: 'THOMAS_GREENE_LICENSE',
     host: ''   /* confirm the real host before filling in; leave blank to omit */
@@ -485,8 +597,8 @@
 
   var PW = 595.28, PH = 841.89, ML = 56, MR = 56, MB = 70;
   var CW = PW - ML - MR;
-  var NAVY = [0.02, 0.03, 0.08], TEAL = [0.18, 0.83, 0.75], TEAL_D = [0.06, 0.46, 0.43];
-  var INK = [0.10, 0.10, 0.13], MUTED = [0.38, 0.40, 0.45], TINT = [0.90, 0.97, 0.96];
+  var NAVY = [0.04, 0.07, 0.22], TEAL = [0.35, 0.78, 0.96], TEAL_D = [0.10, 0.09, 0.55], GOLD = [0.79, 0.64, 0.15];
+  var INK = [0.10, 0.10, 0.13], MUTED = [0.38, 0.40, 0.45], TINT = [0.93, 0.96, 0.99];
 
   function clean(s) {
     return String(s)
@@ -532,7 +644,7 @@
   Doc.prototype.band = function (title, subtitle) {
     var h = 120;
     this.rect(0, PH - h, PW, h, NAVY);
-    this.rect(0, PH - h, PW, 4, TEAL);
+    this.rect(0, PH - h, PW, 4, GOLD);
     this.text(ML, PH - 56, title, true, 22, TEAL);
     this.text(ML, PH - 80, subtitle, false, 11, [0.78, 0.82, 0.88]);
     this.text(ML, PH - 100, META.appName + '  |  Version ' + META.version, false, 9.5, [0.55, 0.62, 0.72]);
@@ -543,7 +655,7 @@
     this.y -= 12;
     this.text(ML, this.y, s, true, 14, TEAL_D);
     this.y -= 7;
-    this.rect(ML, this.y, CW, 0.8, TEAL);
+    this.rect(ML, this.y, CW, 0.8, GOLD);
     this.y -= 16;
   };
   Doc.prototype.sub = function (s) {
@@ -584,7 +696,7 @@
     this.ensure(h + 6);
     var top = this.y;
     this.rect(ML, top - h, CW, h, TINT);
-    this.rect(ML, top - h, 3.5, h, TEAL);
+    this.rect(ML, top - h, 3.5, h, GOLD);
     this.text(ML + pad + 4, top - pad - 9, title, true, 10.5, TEAL_D);
     var yy = top - pad - 9 - 16;
     for (var i = 0; i < lines.length; i++) {
@@ -672,7 +784,8 @@
     d.list([
       'No sign-up: the Toolkit runs in your browser and needs no account.',
       'Your entries (check-ins, thought entries, plans) are stored in this browser on this device. They are not uploaded to a server.',
-      'Storage belongs to the browser. A different browser or device starts empty, so use Save Progress File (see "Saving and Restoring Your Progress") to protect or move your entries.'
+      'Storage belongs to the browser. A different browser or device starts empty, so use Save Progress File (see "Saving and Restoring Your Progress") to protect or move your entries.',
+      'You can delete a saved check-in or thought entry with its Delete button. Deleting cannot be undone.'
     ]);
 
     if (FLAGS.hasPinLock) {
@@ -696,13 +809,11 @@
     ], true);
     if (FLAGS.hasAudio) d.p('Under the timer, choose a Sound (ocean waves, ocean with soft pad, gentle rain, soft wind, calm pad, or silent) and a Voice (calm spoken guide, your own recordings, or off). Turn your device volume up before you start. Your choices are remembered on this device.');
 
-    if (FLAGS.hasPanicButton) {
-      H('Emergency Panic Mode');
-      d.p('If an urge feels overwhelming, press the Panic button for rapid grounding prompts and instant distraction.');
-    }
+    H('Steady Me Now');
+    d.p('If an urge feels overwhelming, press "Steady me now" on the Surfer tab. A calm full-screen page opens with a slow breathing circle and short grounding prompts, such as feeling your feet on the floor and naming things you can see and hear. It plays the sound and voice you chose (or stays silent if Voice is off). It also shows tap-to-call numbers for Samaritans (116 123) and emergency services (112 or 999). Press "I\'m steadier now" to close it.');
 
     H('Thought Unpacker (ABCDE Tab)');
-    d.p('Use this when a trigger sets off automatic thoughts. Fill in each box, then press "Save Thought Entry". Saved reflections are listed underneath.');
+    d.p('Use this when a trigger sets off automatic thoughts. Fill in each box, then press "Save Thought Entry". Saved reflections are listed underneath, each with a Delete button.');
     d.table([
       ['A - Trigger / Activating Event', 'What happened, for example a stressful work meeting or feeling lonely or bored.'],
       ['B - Beliefs / Automatic Thoughts', 'What your mind told you, for example "I need this right now to feel better".'],
@@ -714,7 +825,7 @@
       'Trigger: finished an overwhelming project late at night. Belief: "I deserve a drink or vape to relax, or I won\'t sleep." Consequence: tight chest, intense urge, anxiety 8/10. Reality check: giving in will ruin my sleep and raise my anxiety tomorrow, and I have relaxed without it before. New focus: chamomile tea, a warm shower, and let the urge wave pass.');
 
     H('Cost-Benefit Analysis (CBA Tab)');
-    d.p('Weigh short-term relief against long-term peace of mind. The tab has four boxes. Your text is saved in the browser when you click out of a box.');
+    d.p('Weigh short-term relief against long-term peace of mind. The tab has four boxes. Press "Save Matrix" to save. Your text is also saved on this device as you type.');
     d.table([
       ['Pros of Giving In (short-term)', 'Short-term relief, instant escape, temporary comfort.'],
       ['Cons of Giving In (long-term)', 'Guilt, lost progress, health impacts, broken commitments.'],
@@ -725,7 +836,8 @@
     H('Values Check and Action Planner (Values Tab)');
     d.list([
       'Core Values: type what matters most to you, for example Health, Family, Self-Respect, Freedom, Peace.',
-      'If / Then Coping Plan: pair a high-risk trigger with an immediate coping action.'
+      'If / Then Coping Plan: pair a high-risk trigger with an immediate coping action.',
+      'Press "Save Values and Plan" to save. Your text is also saved on this device as you type.'
     ]);
     d.callout('Example plan',
       'IF I feel overwhelmed after work, THEN I will pause and practice Urge Surfing for 90 seconds.');
@@ -734,9 +846,14 @@
     d.list([
       'Rate your Mood from 1 (low) to 10 (high).',
       'Rate your Urge Intensity from 1 (calm) to 10 (severe).',
+      'Tick what set it off (for example tired, stressed, lonely or late at night), or add your own words.',
+      'Tick what you did (for example the 90-second wave, a walk or speaking to someone), and choose how it went.',
       'Add a brief reflection if you wish, then press "Save Check-In Entry".',
-      'Past check-ins appear under "Recent Logs" so you can spot patterns over time.'
+      'Past check-ins appear under "Recent Logs", each with a Delete button.'
     ], true);
+
+    H('Weekly Pattern Spotter');
+    d.p('At the bottom of the Check-In tab, press "Show my week". The Toolkit counts what you logged in the last 7 days on your own device and sends nothing anywhere. It shows your average mood and urge, the triggers you named most, which times of day or days were hardest, and what you did that went well. It needs a few check-ins before it can show a pattern. It describes your entries and is not a diagnosis. If things feel harder than usual, talk to someone you trust or your GP.');
 
     H('Saving and Restoring Your Progress (Guide Tab)');
     d.list([
@@ -767,11 +884,11 @@
 
     H('Tool Overview');
     d.table([
-      ['Surfer', '90-second guided breathing and mindfulness wave for riding out an urge.'],
+      ['Surfer', '90-second guided breathing and mindfulness wave for riding out an urge, plus a "Steady me now" calming page for overwhelming moments.'],
       ['ABCDE (Thought Unpacker)', 'Cognitive reframing of automatic thoughts and triggers.'],
       ['CBA', 'Decisional balance: short-term relief against long-term outcomes.'],
       ['Values', 'Core values plus If / Then implementation intentions.'],
-      ['Check-In', 'Daily tracking of mood and urge intensity (1 to 10).'],
+      ['Check-In', 'Daily tracking of mood, urge intensity (1 to 10), triggers, what you did and how it went, with a weekly pattern summary.'],
       ['Guide', 'PDF downloads plus Save Progress File and Load Saved Progress File.']
     ]);
 
@@ -883,6 +1000,7 @@
             if (saved) {
                 try {
                     appData = JSON.parse(saved);
+                    ensureShape();
                     renderAbcdeList();
                     renderCbaData();
                     renderValuesData();
@@ -1004,49 +1122,140 @@
         })();
 
         const VOICE_SCRIPTS = [
-            [[0, "Welcome. You are safe, and you are doing something good for yourself. Let your shoulders drop."],
-             [10, "Breathe in slowly, through your nose."], [16, "And let it go, gently, through your mouth."],
-             [26, "This urge is a wave. It rises, it peaks, and it will pass."],
-             [36, "You don't have to fight it. Just watch it, and keep breathing."],
-             [46, "In, and out. Feel your feet on the ground."],
-             [56, "Notice that the wave is already starting to change."],
-             [66, "You are stronger than this moment. Keep breathing slowly."],
-             [76, "Almost there. Let your body soften."], [85, "Well done. You rode the wave."]],
-            [[0, "Let's take ninety seconds together. Unclench your jaw, and soften your hands."],
-             [10, "Breathe in for four, and out for six."],
-             [22, "Look around, and name three things you can see."],
-             [34, "Now notice two sounds. Just listen. There is nothing to change."],
-             [46, "Feel the weight of your body, supported right where you are."],
-             [58, "Every breath is a small win. Keep going."],
-             [68, "The urge is losing its grip. Stay with your breath."],
-             [78, "You are choosing your health, one breath at a time."], [86, "Lovely. That took courage."]],
-            [[0, "Take a moment just for you. There is nothing to fix right now. Only breathe."],
-             [9, "Breathe in calm."], [15, "Breathe out tension."],
-             [26, "Be kind to yourself. Cravings are normal, and they pass."],
-             [38, "Imagine surfing the wave. Rising, balancing, and gliding back down."],
-             [50, "In, and out. Slow and steady."],
-             [62, "Every time you ride a wave, you grow stronger."],
-             [74, "Feel the calm spreading, from your head down to your toes."],
-             [84, "You did it. Be proud of this moment."]]
+            [[0, "Welcome. You're safe here. Take a slow breath in."],
+             [7, "And let it go, nice and slow."],
+             [14, "This urge is a wave. It rises, it peaks, and it passes."],
+             [22, "You don't have to fight it. Just watch it, and keep breathing."],
+             [30, "Breathe in through your nose."],
+             [36, "And out through your mouth."],
+             [43, "Feel your feet on the ground. Feel your breath moving."],
+             [51, "The wave may be at its highest now. That's okay. It will turn."],
+             [59, "Keep breathing. In, and out."],
+             [66, "Notice it's already starting to ease."],
+             [73, "You're doing this. One breath at a time."],
+             [80, "Almost there. Let your body soften."],
+             [86, "Well done. You rode the wave."]],
+            [[0, "Let's take ninety seconds together. Breathe in, slowly."],
+             [7, "And out, a little slower."],
+             [14, "Look around you. Find one thing you can see."],
+             [21, "Now find another. Just notice it."],
+             [28, "Listen. What's one sound nearby?"],
+             [36, "Breathe in for four. And out for six."],
+             [44, "Feel the support of whatever is holding you up."],
+             [52, "Cravings are loud, but they're only a feeling. They'll pass."],
+             [60, "Every breath is a small win."],
+             [67, "The urge is losing its grip. Stay with your breath."],
+             [75, "You're choosing your health, one breath at a time."],
+             [82, "Lovely. Keep that slow breath going."],
+             [87, "That took courage. Well done."]],
+            [[0, "Take a moment just for you. There's nothing to fix right now."],
+             [8, "Breathe in calm."],
+             [13, "Breathe out tension."],
+             [20, "Be kind to yourself. Cravings are normal, and they pass."],
+             [29, "Picture a wave. Rising, then gliding back down."],
+             [38, "In, and out. Slow and steady."],
+             [46, "You've ridden urges before. You can ride this one too."],
+             [54, "Feel the calm spreading, from your head down to your toes."],
+             [62, "Let your shoulders drop. Let your breath be easy."],
+             [70, "Every time you ride a wave, you grow stronger."],
+             [78, "You're nearly there. Stay with it."],
+             [85, "You did it. Be proud of this moment."]],
+            [[0, "Settle in. Breathe in slowly, and let it out."],
+             [7, "We'll count together. In, two, three, four."],
+             [14, "Out, two, three, four, five, six."],
+             [21, "Again. In, two, three, four."],
+             [28, "And out, two, three, four, five, six."],
+             [36, "Good. Let the urge be there. You don't need to act on it."],
+             [45, "Keep your breath slow. Notice how your body feels."],
+             [54, "The wave is moving through you, and it will pass."],
+             [62, "In, slowly. And out, gently."],
+             [70, "You are stronger than this feeling."],
+             [78, "A few more breaths. You're doing really well."],
+             [86, "Beautiful. Well done."]]
         ];
+        let cuePtr = 0;
         let scriptIndex = -1, chosenVoice = null;
 
+        function voiceScore(v) {
+            // Prefer natural/neural voices, then Irish and British English, then voices stored on the device (they also work with no signal).
+            return (/natural|neural|online/i.test(v.name) ? 5 : 0)
+                 + (/en[-_]IE/i.test(v.lang) ? 4 : 0)
+                 + (/en[-_]GB/i.test(v.lang) ? 3 : 0)
+                 + (v.localService ? 2 : 0)
+                 + (/female|sonia|libby|emily|moira|serena|samantha|hazel|susan|fiona|kate|martha|stephanie/i.test(v.name) ? 1 : 0)
+                 - (/espeak|compact/i.test(v.name) ? 3 : 0);
+        }
+        function englishVoices() {
+            if (!('speechSynthesis' in window)) return [];
+            const all = speechSynthesis.getVoices().filter(v => /^en/i.test(v.lang));
+            const nice = all.filter(v => /^en[-_](GB|IE|US)/i.test(v.lang));
+            return (nice.length ? nice : all).sort((a, b) => voiceScore(b) - voiceScore(a));
+        }
         function pickVoice() {
-            if (chosenVoice || !('speechSynthesis' in window)) return chosenVoice;
-            const en = speechSynthesis.getVoices().filter(v => /^en/i.test(v.lang));
+            if (!('speechSynthesis' in window)) return chosenVoice;
+            const want = document.getElementById('voice-pick') ? document.getElementById('voice-pick').value : '';
+            const en = englishVoices();
             if (!en.length) return null;
-            const score = v => (/natural|online/i.test(v.name) ? 4 : 0) + (/en[-_]IE/i.test(v.lang) ? 3 : 0) + (/en[-_]GB/i.test(v.lang) ? 2 : 0) + (/female|sonia|libby|emily|moira|serena|samantha|hazel/i.test(v.name) ? 1 : 0);
-            chosenVoice = en.sort((a, b) => score(b) - score(a))[0];
+            if (want) { const m = en.find(v => v.voiceURI === want || v.name === want); if (m) { chosenVoice = m; return m; } }
+            if (chosenVoice && en.indexOf(chosenVoice) >= 0 && !want) return chosenVoice;
+            chosenVoice = en[0];
             return chosenVoice;
         }
-        if ('speechSynthesis' in window) speechSynthesis.onvoiceschanged = () => { chosenVoice = null; pickVoice(); };
+        function fillVoiceList() {
+            const sel = document.getElementById('voice-pick');
+            if (!sel) return;
+            const keep = sel.value;
+            const en = englishVoices();
+            sel.innerHTML = '<option value="">Best available</option>' + en.map(v =>
+                '<option value="' + (v.voiceURI || v.name).replace(/"/g, '&quot;') + '">' + v.name.replace(/</g, '') + ' (' + v.lang + ')</option>').join('');
+            try {
+                const p = JSON.parse(localStorage.getItem('recovery_toolkit_sound') || 'null');
+                sel.value = keep || (p && p.p) || '';
+            } catch (e) { sel.value = keep || ''; }
+            if (sel.value !== (keep || '')) { /* saved voice not on this device */ }
+        }
+        function onVoicePick() { chosenVoice = null; saveSoundPrefs(); testVoice(); }
+        if ('speechSynthesis' in window) speechSynthesis.onvoiceschanged = () => { chosenVoice = null; fillVoiceList(); pickVoice(); };
 
-        function speak(text) {
-            if (!('speechSynthesis' in window)) return;
+        function makeUtterance(text) {
             const u = new SpeechSynthesisUtterance(text);
-            u.rate = 0.82; u.pitch = 0.95; u.volume = 0.9;
-            const v = pickVoice(); if (v) u.voice = v;
+            const sp = document.getElementById('voice-speed');
+            u.rate = sp ? parseFloat(sp.value) || 0.82 : 0.82;
+            u.pitch = 0.95; u.volume = 1;
+            const v = pickVoice();
+            if (v) { u.voice = v; u.lang = v.lang; } else { u.lang = 'en-GB'; }
+            return u;
+        }
+        function voiceNote(msg) {
+            const n = document.getElementById('voice-note');
+            if (n) n.textContent = msg;
+        }
+        function useLocalVoice() {
+            try {
+                const local = speechSynthesis.getVoices().filter(v => /^en/i.test(v.lang) && v.localService);
+                if (local.length) chosenVoice = local[0];
+            } catch (e) {}
+        }
+        function speak(text, retried) {
+            if (!('speechSynthesis' in window)) { voiceNote("This browser can't speak. Try Chrome."); return; }
+            try { speechSynthesis.resume(); } catch (e) {}
+            const u = makeUtterance(text);
+            u.onerror = (ev) => {
+                if (ev && (ev.error === 'canceled' || ev.error === 'interrupted')) return;
+                if (!retried) { useLocalVoice(); speak(text, true); }
+            };
             speechSynthesis.speak(u);
+        }
+        function testVoice() {
+            if (!('speechSynthesis' in window)) { voiceNote("This browser can't speak. Try Chrome."); return; }
+            voiceNote('');
+            let started = false;
+            const u = makeUtterance('Hello. This is your calm guide. If you can hear me, the voice is working.');
+            u.onstart = () => { started = true; };
+            u.onerror = () => { voiceNote("The voice couldn't play. Check your phone's text-to-speech settings, or try Chrome."); };
+            try { speechSynthesis.cancel(); speechSynthesis.resume(); } catch (e) {}
+            speechSynthesis.speak(u);
+            setTimeout(() => { if (!started) voiceNote("Nothing played. Check media volume and your phone's text-to-speech settings, or try Chrome."); }, 3000);
         }
 
         function soundMode() { return document.getElementById('sound-scene') ? document.getElementById('sound-scene').value : 'off'; }
@@ -1055,6 +1264,7 @@
         function waveStart(fresh) {
             CalmAudio.start(soundMode());
             if (fresh) {
+                cuePtr = 0;
                 if (voiceMode() === 'device') {
                     let i; do { i = Math.floor(Math.random() * VOICE_SCRIPTS.length); } while (i === scriptIndex && VOICE_SCRIPTS.length > 1);
                     scriptIndex = i;
@@ -1069,19 +1279,29 @@
         }
         function waveTick(elapsed) {
             if (voiceMode() === 'device' && scriptIndex >= 0) {
-                VOICE_SCRIPTS[scriptIndex].forEach(c => { if (c[0] === elapsed) speak(c[1]); });
+                const lines = VOICE_SCRIPTS[scriptIndex];
+                let due = null;
+                while (cuePtr < lines.length && lines[cuePtr][0] <= elapsed) { due = lines[cuePtr]; cuePtr++; }
+                if (due) speak(due[1]);
             } else if (voiceMode() === 'mp3') { cueFor(elapsed); }
         }
         function waveEnd() { CalmAudio.stop(); }
 
         function saveSoundPrefs() {
-            try { localStorage.setItem('recovery_toolkit_sound', JSON.stringify({ s: soundMode(), v: voiceMode() })); } catch (e) {}
+            try {
+                const pk = document.getElementById('voice-pick'), sp = document.getElementById('voice-speed');
+                localStorage.setItem('recovery_toolkit_sound', JSON.stringify({ s: soundMode(), v: voiceMode(), p: pk ? pk.value : '', r: sp ? sp.value : '0.82' }));
+            } catch (e) {}
         }
         function loadSoundPrefs() {
             try {
                 const p = JSON.parse(localStorage.getItem('recovery_toolkit_sound') || 'null');
-                if (p) { document.getElementById('sound-scene').value = p.s; document.getElementById('voice-mode').value = p.v; }
+                if (p) {
+                    document.getElementById('sound-scene').value = p.s; document.getElementById('voice-mode').value = p.v;
+                    if (p.r && document.getElementById('voice-speed')) document.getElementById('voice-speed').value = p.r;
+                }
             } catch (e) {}
+            fillVoiceList();
         }
 
         // Optional: your own mp3 recordings (files must sit in the same folder as this page)
@@ -1093,6 +1313,68 @@
         function pauseCue() { if (currentCue) currentCue.pause(); }
         function resumeCue() { if (currentCue && !currentCue.ended) currentCue.play().catch(() => {}); }
         function cueFor(elapsed) { if (CUES[elapsed]) playCue(CUES[elapsed]); }
+
+
+        // ===== Steady me now =====
+        const STEADY_LINES = [
+            "This feeling is a wave. Waves rise, and they pass.",
+            "Breathe in slowly through your nose.",
+            "Now out through your mouth, longer than you breathed in.",
+            "Feel your feet on the floor. Press them down.",
+            "Look around. Find five things you can see.",
+            "Listen. Find three sounds.",
+            "Unclench your jaw. Let your shoulders drop.",
+            "It is already easing. Keep your breath slow.",
+            "You have done this before. You can do it now."
+        ];
+        let steadyTimer = null, steadyIdx = 0, steadyPrevFocus = null, steadySpeaks = false;
+        function showSteadyLine() {
+            const el = document.getElementById('steady-line');
+            const line = STEADY_LINES[steadyIdx % STEADY_LINES.length];
+            if (el) el.textContent = line;
+            if (steadySpeaks) speak(line);
+            steadyIdx++;
+        }
+        function openSteady() {
+            const ov = document.getElementById('steady-overlay');
+            if (!ov) return;
+            if (timerInterval) toggleWaveTimer();
+            steadyPrevFocus = document.activeElement;
+            ov.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            steadyIdx = 0;
+            steadySpeaks = (voiceMode() === 'device');
+            try { CalmAudio.start(soundMode()); } catch (e) {}
+            if (voiceMode() === 'mp3') {
+                try {
+                    const a = new Audio('panic.mp3');
+                    currentCue = a;
+                    const fb = () => { if (!steadySpeaks) { steadySpeaks = true; speak(document.getElementById('steady-line').textContent); } };
+                    a.addEventListener('error', fb);
+                    a.play().catch(fb);
+                } catch (e) { steadySpeaks = true; }
+            }
+            showSteadyLine();
+            clearInterval(steadyTimer);
+            steadyTimer = setInterval(showSteadyLine, 9000);
+            const c = document.getElementById('steady-close-btn');
+            if (c) c.focus();
+        }
+        function closeSteady() {
+            const ov = document.getElementById('steady-overlay');
+            if (!ov) return;
+            clearInterval(steadyTimer); steadyTimer = null;
+            try { CalmAudio.stop(); } catch (e) {}
+            if ('speechSynthesis' in window) speechSynthesis.cancel();
+            pauseCue();
+            ov.classList.add('hidden');
+            document.body.style.overflow = '';
+            if (steadyPrevFocus && steadyPrevFocus.focus) steadyPrevFocus.focus();
+        }
+        document.addEventListener('keydown', (e) => {
+            const ov = document.getElementById('steady-overlay');
+            if (e.key === 'Escape' && ov && !ov.classList.contains('hidden')) closeSteady();
+        });
 
         function toggleWaveTimer() {
             const btn = document.getElementById('start-wave-btn');
@@ -1147,10 +1429,34 @@
             }
         }
 
+        // ===== Helpers =====
+        function esc(s) {
+            return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+        }
+        function flashSaved(id) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            el.textContent = 'Saved on this device ✓';
+            clearTimeout(el._t);
+            el._t = setTimeout(() => { el.textContent = ''; }, 2500);
+        }
+        function ensureShape() {
+            if (!appData || typeof appData !== 'object') appData = {};
+            if (!Array.isArray(appData.abcde)) appData.abcde = [];
+            if (!Array.isArray(appData.checkins)) appData.checkins = [];
+            if (!appData.cba || typeof appData.cba !== 'object') appData.cba = { prosGivein: '', consGivein: '', prosStop: '', consStop: '' };
+            if (!appData.values || typeof appData.values !== 'object') appData.values = { userValues: '', ifThenIf: '', ifThenThen: '' };
+            if (typeof appData.surfed !== 'number') appData.surfed = 0;
+        }
+        function ticked(name) {
+            return Array.from(document.querySelectorAll('input[name="' + name + '"]:checked')).map(x => x.value);
+        }
+
         // ABCDE Entries
         function saveAbcdeEntry(e) {
             e.preventDefault();
             const entry = {
+                ts: Date.now(),
                 date: new Date().toLocaleDateString(),
                 a: document.getElementById('abcde-a').value,
                 b: document.getElementById('abcde-b').value,
@@ -1164,25 +1470,34 @@
             document.getElementById('abcde-form').reset();
         }
 
+        function deleteAbcde(i) {
+            if (!confirm('Delete this saved reflection? This cannot be undone.')) return;
+            appData.abcde.splice(i, 1);
+            saveData();
+            renderAbcdeList();
+        }
+
         function renderAbcdeList() {
+            ensureShape();
             const container = document.getElementById('abcde-list');
-            if (!appData.abcde || appData.abcde.length === 0) {
+            if (appData.abcde.length === 0) {
                 container.innerHTML = `<p class="text-xs text-slate-500 italic">No entries saved yet.</p>`;
                 return;
             }
-            container.innerHTML = appData.abcde.map(item => `
+            container.innerHTML = appData.abcde.map((item, i) => `
                 <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800/80 space-y-1">
                     <div class="flex justify-between text-xs text-slate-400 font-semibold">
-                        <span>Trigger: ${item.a}</span>
-                        <span>${item.date}</span>
+                        <span>Trigger: ${esc(item.a)}</span>
+                        <span>${esc(item.date)}</span>
                     </div>
-                    <p class="text-xs text-teal-300">New Focus: ${item.e || 'N/A'}</p>
+                    <p class="text-xs text-teal-300">New Focus: ${esc(item.e) || 'N/A'}</p>
+                    <div class="text-right"><button type="button" class="del-btn" onclick="deleteAbcde(${i})" aria-label="Delete this reflection">Delete</button></div>
                 </div>
             `).join('');
         }
 
         // CBA Matrix Data
-        function saveCbaData() {
+        function saveCbaData(showMsg) {
             appData.cba = {
                 prosGivein: document.getElementById('cba-pros-givein').value,
                 consGivein: document.getElementById('cba-cons-givein').value,
@@ -1190,6 +1505,7 @@
                 consStop: document.getElementById('cba-cons-stop').value
             };
             saveData();
+            if (showMsg === true) flashSaved('cba-saved');
         }
 
         function renderCbaData() {
@@ -1202,13 +1518,14 @@
         }
 
         // Values & Action Plan
-        function saveValuesData() {
+        function saveValuesData(showMsg) {
             appData.values = {
                 userValues: document.getElementById('user-values').value,
                 ifThenIf: document.getElementById('ifthen-if').value,
                 ifThenThen: document.getElementById('ifthen-then').value
             };
             saveData();
+            if (showMsg === true) flashSaved('values-saved');
         }
 
         function renderValuesData() {
@@ -1222,36 +1539,148 @@
         // Check-ins
         function saveCheckin(e) {
             e.preventDefault();
+            const triggers = ticked('trig');
+            const other = document.getElementById('checkin-trigger-other').value.trim();
+            if (other) triggers.push(other);
+            const now = new Date();
             const entry = {
-                date: new Date().toLocaleDateString(),
+                ts: now.getTime(),
+                hour: now.getHours(),
+                date: now.toLocaleDateString(),
                 mood: document.getElementById('checkin-mood').value,
                 urge: document.getElementById('checkin-urge').value,
-                note: document.getElementById('checkin-note').value
+                note: document.getElementById('checkin-note').value,
+                triggers: triggers,
+                coping: ticked('cope'),
+                outcome: document.getElementById('checkin-outcome').value
             };
             appData.checkins.unshift(entry);
             saveData();
             renderCheckins();
             document.getElementById('checkin-note').value = '';
+            document.getElementById('checkin-trigger-other').value = '';
+            document.getElementById('checkin-outcome').value = '';
+            document.querySelectorAll('input[name="trig"], input[name="cope"]').forEach(x => { x.checked = false; });
         }
 
+        function deleteCheckin(i) {
+            if (!confirm('Delete this check-in? This cannot be undone.')) return;
+            appData.checkins.splice(i, 1);
+            saveData();
+            renderCheckins();
+        }
+
+        const OUTCOME_TEXT = { none: 'No urge', rode: 'Rode it out', gave: 'Gave in' };
+
         function renderCheckins() {
+            ensureShape();
             const container = document.getElementById('checkin-list');
-            if (!appData.checkins || appData.checkins.length === 0) {
+            if (appData.checkins.length === 0) {
                 container.innerHTML = `<p class="text-xs text-slate-500 italic">No check-ins logged yet.</p>`;
                 return;
             }
-            container.innerHTML = appData.checkins.map(item => `
-                <div class="bg-slate-950 p-3 rounded-xl border border-slate-800/80 flex justify-between items-center">
-                    <div>
-                        <span class="text-slate-300 font-medium">${item.date}</span>
-                        <p class="text-slate-400 mt-0.5">${item.note || 'No notes'}</p>
+            container.innerHTML = appData.checkins.map((item, i) => {
+                const trig = (item.triggers && item.triggers.length) ? `<p class="text-slate-400 mt-0.5">Triggers: ${esc(item.triggers.join(', '))}</p>` : '';
+                const cope = (item.coping && item.coping.length) ? `<p class="text-slate-400 mt-0.5">Did: ${esc(item.coping.join(', '))}</p>` : '';
+                const out = item.outcome ? `<p class="text-slate-400 mt-0.5">${esc(OUTCOME_TEXT[item.outcome] || '')}</p>` : '';
+                return `
+                <div class="bg-slate-950 p-3 rounded-xl border border-slate-800/80">
+                    <div class="flex justify-between items-start gap-2">
+                        <div>
+                            <span class="text-slate-300 font-medium">${esc(item.date)}</span>
+                            <p class="text-slate-400 mt-0.5">${esc(item.note) || 'No notes'}</p>
+                            ${trig}${cope}${out}
+                        </div>
+                        <div class="text-right space-y-1 shrink-0">
+                            <div class="text-teal-400 font-medium">Mood: ${esc(item.mood)}/10</div>
+                            <div class="text-rose-400 font-medium">Urge: ${esc(item.urge)}/10</div>
+                        </div>
                     </div>
-                    <div class="text-right space-x-2">
-                        <span class="text-teal-400 font-medium">Mood: ${item.mood}/10</span>
-                        <span class="text-rose-400 font-medium">Urge: ${item.urge}/10</span>
-                    </div>
-                </div>
-            `).join('');
+                    <div class="text-right mt-2"><button type="button" class="del-btn" onclick="deleteCheckin(${i})" aria-label="Delete this check-in">Delete</button></div>
+                </div>`;
+            }).join('');
+        }
+
+        // ===== Weekly Pattern Spotter (counting only, runs on this device) =====
+        function spotterAnalyse(list, nowMs) {
+            const DAY = 86400000;
+            const mine = list.filter(c => typeof c.ts === 'number');
+            const wk = mine.filter(c => c.ts > nowMs - 7 * DAY && c.ts <= nowMs);
+            const prev = mine.filter(c => c.ts > nowMs - 14 * DAY && c.ts <= nowMs - 7 * DAY);
+            const avg = (arr, k) => arr.length ? arr.reduce((s, c) => s + (Number(c[k]) || 0), 0) / arr.length : null;
+            const r1 = x => x == null ? null : Math.round(x * 10) / 10;
+            const res = { n: wk.length, older: list.length - mine.length, avgMood: r1(avg(wk, 'mood')), avgUrge: r1(avg(wk, 'urge')), prevN: prev.length, prevUrge: r1(avg(prev, 'urge')) };
+
+            // triggers
+            const tmap = {};
+            wk.forEach(c => (c.triggers || []).forEach(t => { (tmap[t] = tmap[t] || []).push(Number(c.urge) || 0); }));
+            res.triggers = Object.keys(tmap).map(t => ({ name: t, count: tmap[t].length, urge: r1(tmap[t].reduce((a, b) => a + b, 0) / tmap[t].length) }))
+                .sort((a, b) => b.count - a.count || b.urge - a.urge);
+
+            // time of day
+            const bucket = h => h >= 5 && h < 12 ? 'morning' : h >= 12 && h < 17 ? 'afternoon' : h >= 17 && h < 22 ? 'evening' : 'late night';
+            const bmap = {};
+            wk.forEach(c => { const h = typeof c.hour === 'number' ? c.hour : new Date(c.ts).getHours(); const b = bucket(h); (bmap[b] = bmap[b] || []).push(Number(c.urge) || 0); });
+            res.times = Object.keys(bmap).map(b => ({ name: b, count: bmap[b].length, urge: r1(bmap[b].reduce((a, c) => a + c, 0) / bmap[b].length) }))
+                .sort((a, b) => b.urge - a.urge);
+
+            // weekday
+            const names = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+            const dmap = {};
+            wk.forEach(c => { const d = names[new Date(c.ts).getDay()]; (dmap[d] = dmap[d] || []).push(Number(c.urge) || 0); });
+            res.days = Object.keys(dmap).map(d => ({ name: d, count: dmap[d].length, urge: r1(dmap[d].reduce((a, c) => a + c, 0) / dmap[d].length) }))
+                .sort((a, b) => b.urge - a.urge);
+
+            // coping and outcomes
+            const cmap = {};
+            wk.forEach(c => (c.coping || []).forEach(t => { const o = cmap[t] = cmap[t] || { used: 0, rode: 0, gave: 0 }; o.used++; if (c.outcome === 'rode') o.rode++; if (c.outcome === 'gave') o.gave++; }));
+            res.coping = Object.keys(cmap).map(t => ({ name: t, used: cmap[t].used, rode: cmap[t].rode, gave: cmap[t].gave })).sort((a, b) => b.used - a.used);
+            res.rode = wk.filter(c => c.outcome === 'rode').length;
+            res.gave = wk.filter(c => c.outcome === 'gave').length;
+            res.none = wk.filter(c => c.outcome === 'none').length;
+            return res;
+        }
+
+        function spotterLines(r) {
+            const out = [];
+            if (r.n === 0) {
+                out.push('No check-ins from the last 7 days yet. Log a few on the Check-In tab, then come back.');
+                if (r.older) out.push(r.older + ' older check-in(s) were saved before time tracking, so they are left out of the weekly counts.');
+                return out;
+            }
+            out.push('<strong>Your week:</strong> ' + r.n + ' check-in' + (r.n === 1 ? '' : 's') + '. Average mood ' + r.avgMood + '/10, average urge ' + r.avgUrge + '/10.');
+            if (r.prevN > 0) {
+                const d = Math.round((r.avgUrge - r.prevUrge) * 10) / 10;
+                out.push('<strong>Compared with the week before:</strong> ' + (d === 0 ? 'about the same urge level.' : 'average urge is ' + (d < 0 ? 'down ' : 'up ') + Math.abs(d) + ' points (' + r.prevUrge + ' to ' + r.avgUrge + ').'));
+            }
+            if (r.n < 3) out.push('That is not many check-ins yet, so treat anything below as a rough guide. A pattern needs about three or more.');
+            if (r.triggers.length) {
+                out.push('<strong>Triggers you named most:</strong> ' + r.triggers.slice(0, 3).map(t => esc(t.name) + ' (' + t.count + 'x, average urge ' + t.urge + ')').join('; ') + '.');
+                const hi = r.triggers.filter(x => x.count >= 2).sort((a, b) => b.urge - a.urge)[0];
+                if (hi && hi.urge >= 6) out.push('<strong>Strongest urges came with:</strong> ' + esc(hi.name) + '. Worth putting in your If / Then plan.');
+            } else {
+                out.push('No triggers ticked this week. Ticking even one each time makes this section useful.');
+            }
+            const t = r.times.filter(x => x.count >= 2);
+            if (t.length >= 2 && t[0].urge - t[t.length - 1].urge >= 1.5) out.push('<strong>Time of day:</strong> urges ran highest in the ' + t[0].name + ' (average ' + t[0].urge + ') and lowest in the ' + t[t.length - 1].name + ' (average ' + t[t.length - 1].urge + ').');
+            const d = r.days.filter(x => x.count >= 2);
+            if (d.length >= 2 && d[0].urge - d[d.length - 1].urge >= 1.5) out.push('<strong>Day of week:</strong> ' + d[0].name + ' tended to be your hardest day (average urge ' + d[0].urge + ').');
+            if (r.coping.length) {
+                out.push('<strong>What you did:</strong> ' + r.coping.slice(0, 4).map(c => esc(c.name) + ' (' + c.used + 'x)').join('; ') + '.');
+                const good = r.coping.filter(c => c.used >= 2 && c.rode >= 2 && c.gave === 0)[0];
+                if (good) out.push('<strong>Worth keeping:</strong> each time you used "' + esc(good.name) + '" and logged how it went, you rode it out (' + good.rode + ' of ' + good.used + ').');
+            }
+            if (r.rode + r.gave > 0) out.push('<strong>Outcomes logged:</strong> rode it out ' + r.rode + ', gave in ' + r.gave + (r.none ? ', no urge ' + r.none : '') + '.');
+            if (r.gave > 0) out.push('A slip is information, not failure. Look at what the triggers had in common and write one IF / THEN for it.');
+            if (r.older) out.push('<span class="text-slate-400">' + r.older + ' older check-in(s) saved before time tracking are not counted.</span>');
+            out.push('<span class="text-slate-400">These are counts of what you logged, not a diagnosis. If things feel harder than usual, talk to someone you trust or your GP. In danger: 112 or 999. Samaritans: 116 123.</span>');
+            return out;
+        }
+
+        function runPatternSpotter() {
+            ensureShape();
+            const lines = spotterLines(spotterAnalyse(appData.checkins, Date.now()));
+            document.getElementById('pattern-output').innerHTML = lines.map(l => `<p class="bg-slate-950 border border-slate-800 rounded-xl p-3">${l}</p>`).join('');
         }
 
         // Backup & Restore
@@ -1272,6 +1701,7 @@
             reader.onload = function(e) {
                 try {
                     appData = JSON.parse(e.target.result);
+                    ensureShape();
                     saveData();
                     renderAbcdeList();
                     renderCbaData();
@@ -1289,6 +1719,14 @@
         function downloadUserGuidePDF() { RecoveryPDF.download('guide'); }
         function downloadExecutiveSummaryPDF() { RecoveryPDF.download('overview'); }
     </script>
+<!-- Steady-me-now screen -->
+<div id="steady-overlay" class="steady-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="steady-title">
+    <h2 id="steady-title" class="text-lg font-bold text-teal-300 mb-6">You are safe right now. Let's slow down together.</h2>
+    <div class="steady-circle mb-8" aria-hidden="true"></div>
+    <p id="steady-line" class="steady-line" aria-live="polite"></p>
+    <button type="button" id="steady-close-btn" onclick="closeSteady()" class="mt-6 bg-teal-500 hover:bg-teal-400 text-slate-950 font-semibold px-8 py-3 rounded-xl min-h-[48px]">I'm steadier now</button>
+    <p class="mt-8 text-sm text-slate-300">Want a person? Samaritans are free, any time: <a href="tel:116123" class="text-amber-300 underline">116 123</a>.<br>In danger: <a href="tel:112" class="text-amber-300 underline">112</a> or <a href="tel:999" class="text-amber-300 underline">999</a>.</p>
+</div>
 <!-- Local Privacy-First QR Code Box -->
 <div class="bg-slate-950 border border-slate-800 p-5 rounded-xl space-y-4 text-center max-w-sm mx-auto my-6">
     <div class="flex items-center justify-center gap-2 text-teal-400 font-semibold text-sm">
@@ -1305,16 +1743,18 @@
 
 <!-- Local Script for QR Generation -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>window.__noQR = (typeof QRCode === "undefined");</script>
 <script>
     function makeLocalQR() {
         const container = document.getElementById('local-qr-box');
         const urlText = document.getElementById('local-qr-input').value;
         container.innerHTML = "";
+        if (typeof QRCode === "undefined") { container.innerHTML = '<span style="color:#334155;font-size:12px">QR needs the internet to build. Open the app online and try again.</span>'; return; }
         new QRCode(container, {
             text: urlText,
             width: 140,
             height: 140,
-            colorDark: "#0f172a",
+            colorDark: "#101847",
             colorLight: "#ffffff",
             correctLevel: QRCode.CorrectLevel.M
         });
