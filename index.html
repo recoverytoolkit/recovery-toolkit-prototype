@@ -241,38 +241,19 @@
                         </label>
                         <label class="flex items-center gap-2">Voice
                             <select id="voice-mode" onchange="saveSoundPrefs()" class="bg-slate-900 border border-slate-700 rounded-lg px-2 py-1.5 text-white">
-                                <option value="device">Calm spoken guide</option>
-                                <option value="mp3">My recordings</option>
-                                <option value="off">Off</option>
-                            </select>
-                        <div class="flex flex-wrap justify-center gap-3 text-xs text-slate-300">
-                        <label class="flex items-center gap-2">Sound
-                            <select id="sound-scene" onchange="saveSoundPrefs()" class="bg-slate-900 border border-slate-700 rounded-lg px-2 py-1.5 text-white">
-                                <option value="ocean">Ocean waves</option>
-                                <option value="oceanpad">Ocean + soft pad</option>
-                                <option value="rain">Gentle rain</option>
-                                <option value="wind">Soft wind</option>
-                                <option value="pad">Calm pad</option>
-                                <option value="off">Silent</option>
-                            </select>
-                        </label>
-                        <label class="flex items-center gap-2">Voice
-                            <select id="voice-mode" onchange="saveSoundPrefs()" class="bg-slate-900 border border-slate-700 rounded-lg px-2 py-1.5 text-white">
                                 <option value="mp3">Calm Spoken Voice</option>
                                 <option value="off">Off</option>
                             </select>
                         </label>
                         <label class="flex items-center gap-2">Speed
                             <select id="voice-speed" onchange="saveSoundPrefs()" class="bg-slate-900 border border-slate-700 rounded-lg px-2 py-1.5 text-white">
-                                <option value="0.72">Slower</option>
-                                <option value="0.82" selected>Calm</option>
-                                <option value="0.92">Normal</option>
+                                <option value="0.9">Slower</option>
+                                <option value="1" selected>Calm</option>
+                                <option value="1.1">Quicker</option>
                             </select>
                         </label>
                     </div>
-                    </div>
-                    <p id="voice-note" class="text-xs text-amber-400"></p>
-                    <p class="text-xs text-slate-500">Turn your volume up, then tap the circle or the Start button. A different guide is chosen each time.</p>
+                    <p class="text-xs text-slate-500">Turn your volume up, then tap the circle or the Start button.</p>
                 </div>
             </section>
 
@@ -818,10 +799,10 @@
       'Press "Pause Wave" to pause and "Resume Wave" to continue.',
       'When the timer ends you will see a "Wave completed" message and the app counts the completed wave.'
     ], true);
-    if (FLAGS.hasAudio) d.p('Under the timer, choose a Sound (ocean waves, ocean with soft pad, gentle rain, soft wind, calm pad, or silent) and a Voice (calm spoken guide, your own recordings, or off). Turn your device volume up before you start. Your choices are remembered on this device.');
+    if (FLAGS.hasAudio) d.p('Under the timer, choose a Sound (ocean waves, ocean with soft pad, gentle rain, soft wind, calm pad, or silent) a Voice (Calm Spoken Voice, which plays the recordings stored with the app, or Off) and a Speed (Slower, Calm or Quicker). Turn your device volume up before you start. Your choices are remembered on this device.');
 
     H('Steady Me Now');
-    d.p('If an urge feels overwhelming, press "Steady me now" on the Surfer tab. A calm full-screen page opens with a slow breathing circle and short grounding prompts, such as feeling your feet on the floor and naming things you can see and hear. It plays the sound and voice you chose (or stays silent if Voice is off). It also shows tap-to-call numbers for Samaritans (116 123) and emergency services (112 or 999). Press "I\'m steadier now" to close it.');
+    d.p('If an urge feels overwhelming, press "Steady me now" on the Surfer tab. A calm full-screen page opens with a slow breathing circle and short grounding prompts, such as feeling your feet on the floor and naming things you can see and hear. It plays the sound you chose and the Calm Spoken Voice recording (or stays silent if Voice is off). It also shows tap-to-call numbers for Samaritans (116 123) and emergency services (112 or 999). Press "I\'m steadier now" to close it.');
 
     H('Thought Unpacker (ABCDE Tab)');
     d.p('Use this when a trigger sets off automatic thoughts. Fill in each box, then press "Save Thought Entry". Saved reflections are listed underneath, each with a Delete button.');
@@ -1270,7 +1251,8 @@
         }
 
         function soundMode() { return document.getElementById('sound-scene') ? document.getElementById('sound-scene').value : 'off'; }
-        function voiceMode() { return document.getElementById('voice-mode') ? document.getElementById('voice-mode').value : 'off'; }
+        function voiceMode() { const el = document.getElementById('voice-mode'); return el && el.value === 'mp3' ? 'mp3' : 'off'; }
+        function voiceRate() { const el = document.getElementById('voice-speed'); const r = el ? parseFloat(el.value) : 1; return (r >= 0.5 && r <= 1.5) ? r : 1; }
 
         function waveStart(fresh) {
             CalmAudio.start(soundMode());
@@ -1308,8 +1290,10 @@
             try {
                 const p = JSON.parse(localStorage.getItem('recovery_toolkit_sound') || 'null');
                 if (p) {
-                    document.getElementById('sound-scene').value = p.s; document.getElementById('voice-mode').value = p.v;
-                    if (p.r && document.getElementById('voice-speed')) document.getElementById('voice-speed').value = p.r;
+                    const sc = document.getElementById('sound-scene'), vm = document.getElementById('voice-mode'), sp = document.getElementById('voice-speed');
+                    if (sc && Array.from(sc.options).some(o => o.value === p.s)) sc.value = p.s;
+                    if (vm) vm.value = (p.v === 'off') ? 'off' : 'mp3';   /* the old phone-voice choice now means the recordings */
+                    if (sp && p.r && Array.from(sp.options).some(o => o.value === String(p.r))) sp.value = String(p.r);
                 }
             } catch (e) {}
             fillVoiceList();
@@ -1319,7 +1303,7 @@
         let currentCue = null;
         const CUES = { 30: 'peak.mp3', 60: 'subsiding.mp3', 90: 'done.mp3' };
         function playCue(file) {
-            try { if (currentCue) currentCue.pause(); currentCue = new Audio(file); currentCue.play().catch(() => {}); } catch (e) {}
+            try { if (currentCue) currentCue.pause(); currentCue = new Audio(file); currentCue.playbackRate = voiceRate(); currentCue.play().catch(() => {}); } catch (e) {}
         }
         function pauseCue() { if (currentCue) currentCue.pause(); }
         function resumeCue() { if (currentCue && !currentCue.ended) currentCue.play().catch(() => {}); }
@@ -1354,16 +1338,15 @@
             ov.classList.remove('hidden');
             document.body.style.overflow = 'hidden';
             steadyIdx = 0;
-            steadySpeaks = (voiceMode() === 'device');
+            steadySpeaks = false;
             try { CalmAudio.start(soundMode()); } catch (e) {}
             if (voiceMode() === 'mp3') {
                 try {
                     const a = new Audio('panic.mp3');
                     currentCue = a;
-                    const fb = () => { if (!steadySpeaks) { steadySpeaks = true; speak(document.getElementById('steady-line').textContent); } };
-                    a.addEventListener('error', fb);
-                    a.play().catch(fb);
-                } catch (e) { steadySpeaks = true; }
+                    a.playbackRate = voiceRate();
+                    a.play().catch(() => {});
+                } catch (e) {}
             }
             showSteadyLine();
             clearInterval(steadyTimer);
